@@ -16,7 +16,8 @@ node {
             try {
                 env.DOCKERFILE = env.DOCKERFILE
             }
-            catch (groovy.lang.MissingPropertyException e ) {
+            catch (e) {
+            //catch (groovy.lang.MissingPropertyException e ) {
                 echo "Received an exception!!!"
                 env.DOCKERFILE = "Dockerfile"
             }
