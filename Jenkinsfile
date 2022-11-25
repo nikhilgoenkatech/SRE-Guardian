@@ -3,8 +3,8 @@ node {
         APP_NAME = "SampleNodeJs"
         STAGING = "Staging"
         PRODUCTION = "Production"
-    }
-    echo "1 ${EXECUTION_ID}" 
+        execution_id = 0
+    } 
     
     stage('Checkout') {
         // Checkout our application source code
@@ -69,7 +69,7 @@ node {
         }
         dir('dynatrace-scripts') {
             // Trigger the on-demand synthetic monitor as part of the Testing cycle
-            ${EXECUTION_ID} = sh('python3 trigger_syn_monitor.py ${DT_URL} ${DT_TOKEN} ${BUILD_NUMBER}')
+            env.execution_id = sh('python3 trigger_syn_monitor.py ${DT_URL} ${DT_TOKEN} ${BUILD_NUMBER}')
         }
         
         // lets run some test scripts
@@ -138,7 +138,7 @@ node {
             echo "Checking Sythetic monitor status"
             try {
               STATUS = 0
-                STATUS = sh 'python3 check_synthetic_run.py ${DT_URL} ${DT_TOKEN} ${EXECUTION_ID}'
+                STATUS = sh 'python3 check_synthetic_run.py ${DT_URL} ${DT_TOKEN} env.execution_id'
             } catch (Exception e) {
                 if (STATUS) {
                     error("Synthetic monitor has failed. Aboritig the build!!")
