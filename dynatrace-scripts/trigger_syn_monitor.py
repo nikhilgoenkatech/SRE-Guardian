@@ -53,3 +53,4 @@ if __name__ == "__main__":
 
   finally:
     print("Succesfully completed main")
+    return batchId
