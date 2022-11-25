@@ -233,7 +233,7 @@ node {
             try {
                  // Check if there are vulnerabilities identified by DT
                  DYNATRACE_SEC_PROBLEM_COUNT = 0
-                 def DYNATRACE_SEC_PROBLEM_COUNT = sh(returnStatus: true, script: 'python3 checkforvulnerability.py ${DT_URL} ${DT_TOKEN} [Environment]Environment:Staging 7.5')
+                 def DYNATRACE_SEC_PROBLEM_COUNT = sh(returnStatus: true, script: 'python3 checkforvulnerability.py ${DT_URL} ${DT_TOKEN} [Environment]Environment:Staging 9.5')
                  echo 'Printing the returned problem count'
                  echo "$DYNATRACE_SEC_PROBLEM_COUNT"
                 
