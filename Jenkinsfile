@@ -51,7 +51,7 @@ node {
                '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' + 
                'Jenkins ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
             
-            // Create a sample synthetic monitor so as to check the UI functionlity
+            // Create a on-demand synthetic monitor so as to check the UI functionlity
             sh './synthetic-monitor.sh Staging '+  '${JOB_NAME} ${BUILD_NUMBER}' + ' 3000'
             
             // Create a sample dashboard for the staging stage
@@ -65,6 +65,10 @@ node {
             sh './pushevent.sh SERVICE CONTEXTLESS DockerService SampleOnlineBankStaging ' +
                '"STARTING Load Test" ${JOB_NAME} "Starting a Load Test as part of the Testing stage"' + 
                ' ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
+        }
+        dir('dynatrace-scripts') {
+            // Trigger the on-demand synthetic monitor as part of the Testing cycle
+            def EXCUTION_ID = sh('python3 trigger_syn_monitor.py ${DT_URL} ${DT_TOKEN} ${BUILD_NUMBER}')
         }
         
         // lets run some test scripts
@@ -128,8 +132,21 @@ node {
                 throw(e)
             }
             archiveArtifacts artifacts: 'securityVulnerabilityReport.txt', fingerprint: true
+        
+            // Validate if synthetic monitor ran into any issues 
+            echo "Checking Sythetic monitor status"
+            try {
+              STATUS = 0
+              STATUS = sh 'python3 check_synthetic_run.py ${DT_URL} ${DT_TOKEN} EXECUTION_ID'
+            } catch (Exception e) {
+                if (STATUS) {
+                    error("Synthetic monitor has failed. Aboritig the build!!")
+                    currentBuild.result = 'ABORTED'
+                    sh "exit ${STATUS}"
+                }
+            }
             
-            echo "About to go in"            
+            echo "Will look for any open problems"            
             // lets see if Dynatrace AI found problems -> if so - we can stop the pipeline!
             try {
                  DYNATRACE_PROBLEM_COUNT = 0
