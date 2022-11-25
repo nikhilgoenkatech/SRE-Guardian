@@ -4,7 +4,8 @@ node {
         STAGING = "Staging"
         PRODUCTION = "Production"
     }
- 
+    echo "1 ${EXECUTION_ID}" 
+    
     stage('Checkout') {
         // Checkout our application source code
         git url: 'https://github.com/nikhilgoenkatech/JenkinsBankApp.git'
@@ -68,7 +69,7 @@ node {
         }
         dir('dynatrace-scripts') {
             // Trigger the on-demand synthetic monitor as part of the Testing cycle
-            def EXCUTION_ID = sh('python3 trigger_syn_monitor.py ${DT_URL} ${DT_TOKEN} ${BUILD_NUMBER}')
+            ${EXECUTION_ID} = sh('python3 trigger_syn_monitor.py ${DT_URL} ${DT_TOKEN} ${BUILD_NUMBER}')
         }
         
         // lets run some test scripts
@@ -137,7 +138,7 @@ node {
             echo "Checking Sythetic monitor status"
             try {
               STATUS = 0
-              STATUS = sh 'python3 check_synthetic_run.py ${DT_URL} ${DT_TOKEN} EXECUTION_ID'
+                STATUS = sh 'python3 check_synthetic_run.py ${DT_URL} ${DT_TOKEN} ${EXECUTION_ID}'
             } catch (Exception e) {
                 if (STATUS) {
                     error("Synthetic monitor has failed. Aboritig the build!!")
