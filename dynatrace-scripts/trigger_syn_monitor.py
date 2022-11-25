@@ -46,7 +46,7 @@ if __name__ == "__main__":
 
       data = trigger_on_demand_monitor(DT_URL, DT_TOKEN, payload)
       print(data)
-      exec_id = data["triggered"][0]["executions"][0]["executionId"]
+      batchId = data["batchId"]
 
   except Exception as e:
     print("Exception in main " + str(e))
