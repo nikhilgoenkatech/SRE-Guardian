@@ -69,7 +69,8 @@ node {
         }
         dir('dynatrace-scripts') {
             // Trigger the on-demand synthetic monitor as part of the Testing cycle
-            env.execution_id = sh('python3 trigger_syn_monitor.py ${DT_URL} ${DT_TOKEN} ${BUILD_NUMBER}')
+            env.execution_id = sh('python3 trigger_syn_monitor.py ${DT_URL} ${DT_TOKEN} ${BUILD_NUMBER}', returnStatus: true)
+
         }
         
         // lets run some test scripts
