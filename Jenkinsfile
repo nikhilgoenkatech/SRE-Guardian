@@ -114,27 +114,7 @@ node {
     }
     
     stage('ValidateStaging') {
-        dir ('dynatrace-scripts') {      
-            try {
-                 // Check if there are vulnerabilities identified by DT
-                 DYNATRACE_SEC_PROBLEM_COUNT = 0
-                 def DYNATRACE_SEC_PROBLEM_COUNT = sh(returnStatus: true, script: 'python3 checkforvulnerability.py ${DT_URL} ${DT_TOKEN} [Environment]Environment:Staging 7.5')
-                 echo 'Printing the returned problem count'
-                 echo "$DYNATRACE_SEC_PROBLEM_COUNT"
-                
-                 if (DYNATRACE_SEC_PROBLEM_COUNT) {
-                    error("Dynatrace identified some vulnerabilities. ABORTING the build!!")
-                 }
-            } catch (e) {
-                if (DYNATRACE_SEC_PROBLEM_COUNT) {
-                    sh 'mv securityVulnerabilityReport.txt securityVulnerabilityReportStaging.txt'
-                    archiveArtifacts artifacts: 'securityVulnerabilityReportStaging.txt', fingerprint: true
-                    currentBuild.result = 'ABORTED'
-                }
-                throw(e)
-            }
-            archiveArtifacts artifacts: 'securityVulnerabilityReport.txt', fingerprint: true
-        
+        dir ('dynatrace-scripts') {              
             // Validate if synthetic monitor ran into any issues 
             echo "Checking Sythetic monitor status"
             try {
@@ -232,24 +212,6 @@ node {
     
     stage('ValidateProduction') {
         dir ('dynatrace-scripts') {      
-            try {
-                 // Check if there are vulnerabilities identified by DT
-                 DYNATRACE_SEC_PROBLEM_COUNT = 0
-                 def DYNATRACE_SEC_PROBLEM_COUNT = sh(returnStatus: true, script: 'python3 checkforvulnerability.py ${DT_URL} ${DT_TOKEN} [Environment]Environment:Staging 9.5')
-                 echo 'Printing the returned problem count'
-                 echo "$DYNATRACE_SEC_PROBLEM_COUNT"
-                
-                 if (DYNATRACE_SEC_PROBLEM_COUNT) {
-                    error("Dynatrace identified some vulnerabilities. ABORTING the build!!")
-                 }
-            } catch (e) {
-                if (DYNATRACE_SEC_PROBLEM_COUNT) {
-                    sh 'mv securityVulnerabilityReport.txt securityVulnerabilityReportProd.txt'
-                    archiveArtifacts artifacts: 'securityVulnerabilityReportProd.txt', fingerprint: true
-                    currentBuild.result = 'ABORTED'
-                }
-                throw(e)
-            }
 
             // lets see if Dynatrace AI found problems -> if so - we can stop the pipeline!
             try {
