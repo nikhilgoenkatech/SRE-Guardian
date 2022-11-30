@@ -19,32 +19,16 @@
 # ./dynatrace-scripts/pushevent.sh SERVICE CONTEXTLESS DockerService SampleNodeJsStaging "Starting Load Test" ${JOB_NAME} "Starting a JMeter Load Testing as part of the Testing stage" ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}
 
 PAYLOAD=$(cat <<EOF
-{
-  "eventType": "CUSTOM_ANNOTATION",
-  "attachRules" : {
-    "tagRule" : [
-      {
-        "meTypes" : ["$1"],
-        "tags" : [
-          {
-            "context" : "$2",
-            "key" : "$3",
-            "value" : "$4"
-          }]
-      }]
-  },
-  "annotationType" : "$5",
-  "source" : "$6",
-  "annotationDescription" : "$7",
+{  "eventType": "CUSTOM_ANNOTATION",
+  "entitySelector": "type($1), tag($2:$3)",
+  "title":$4,
   "customProperties" : {
-    "JenkinsUrl" : "$8",
-    "BuildUrl" : "$9",
-    "GitCommit" : "$10"
+  "JenkinsUrl" : "$6",
+  "BuildUrl" : "$8"
   }
 }
 EOF
 )
 
 echo $PAYLOAD
-echo ${DT_URL}/api/v1/events
-curl -H "Content-Type: application/json" -H "Authorization: Api-Token ${DT_TOKEN}" -X POST -d "${PAYLOAD}" ${DT_URL}/api/v1/events
+curl -H "Content-Type: application/json" -H "Authorization: Api-Token ${DT_TOKEN}" -X POST -d "${PAYLOAD}" ${DT_URL}/api/v2/events/ingest/
