@@ -23,18 +23,14 @@ PAYLOAD=$(cat <<EOF
   "entitySelector":
      "type($1), tag($2)",
   "properties": {
-    "dt.event.deployment.release_stage":"$11",
-    "dt.event.deployment.release_product":"$12",
-    "dt.event.deployment.name":"$12" + "$5",
-    "dt.event.deployment.project": "$7",
+    "dt.event.deployment.release_stage":"$6",
+    "dt.event.deployment.release_product":"$10",
+    "dt.event.deployment.name":"$7",
+    "dt.event.deployment.project": "$5",
     "dt.event.deployment.remediation_action_link": "my-ansible-playbook",
-    "dt.event.deployment.version": "$5",
+    "dt.event.deployment.version": "$4",
     "dt.event.is_rootcause_relevant" : true
    }
-   "customProperties" : {
-    "JenkinsUrl" : "$8",
-    "BuildUrl" : "$10"
-  }
 }
 EOF
 )
