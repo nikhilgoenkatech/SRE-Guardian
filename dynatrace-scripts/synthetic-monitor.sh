@@ -1,5 +1,5 @@
 #!/bin/bash
-  
+
 PAYLOAD=$(cat <<EOF
 {
   "name": "$1 $2-$3",
@@ -51,7 +51,7 @@ PAYLOAD=$(cat <<EOF
             }
           ]
         },
-                "button": 0,
+        "button": 0,
         "wait": {
           "waitFor": "page_complete"
         }
@@ -99,7 +99,7 @@ PAYLOAD=$(cat <<EOF
             {
               "type": "css",
               "value": ".form-control"
-                          },
+            },
             {
               "type": "css",
               "value": "html body:nth-child(8) div:nth-child(2) div div:nth-child(2) div:nth-child(2) div input:nth-child(2)"
@@ -152,7 +152,7 @@ PAYLOAD=$(cat <<EOF
       {
         "type": "keystrokes",
         "description": "keystrokes on \"Amount\"",
-                "target": {
+        "target": {
           "locators": [
             {
               "type": "css",
@@ -205,7 +205,7 @@ PAYLOAD=$(cat <<EOF
               "type": "css",
               "value": "body div.container-fluid form div.jumbotron div.container div.row div.col-md-6 button.btn"
             }
-                      ]
+          ]
         },
         "button": 0,
         "wait": {
@@ -251,7 +251,7 @@ PAYLOAD=$(cat <<EOF
           "locators": [
             {
               "type": "css",
-                            "value": "#amount"
+              "value": "#amount"
             },
             {
               "type": "css",
@@ -304,7 +304,7 @@ PAYLOAD=$(cat <<EOF
         },
         "button": 0,
         "wait": {
-                  "waitFor": "page_complete"
+          "waitFor": "page_complete"
         }
       },
       {
@@ -342,12 +342,10 @@ PAYLOAD=$(cat <<EOF
     ]
   },
   "locations": [
-    "GEOLOCATION-6CACEA9089099635",
-    "GEOLOCATION-B8D793BCA914E0AF"
+    "GEOLOCATION-6CACEA9089099635"
   ],
   "anomalyDetection": {
     "outageHandling": {
-        "outageHandling": {
       "globalOutage": true,
       "globalOutagePolicy": {
         "consecutiveRuns": 1
@@ -365,7 +363,7 @@ PAYLOAD=$(cat <<EOF
     }
   },
   "tags": [
-   "$3"
+   "S1-$3"
   ],
   "managementZones": [],
   "automaticallyAssignedApps": [],
