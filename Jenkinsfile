@@ -45,13 +45,8 @@ node {
             // push a deployment event on the host with the tag JenkinsInstance created using automatic tagging rule
             sh './pushdeployment.sh HOST JenkinsInstance ' +
                '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' + 
-               'Jenkins ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
-            
-            // now I push one on the actual service (it has the tags from our rules)
-            sh './pushdeployment.sh SERVICE DockerService SampleOnlineBankStaging ' + 
-               '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' + 
-               'Jenkins ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
-            
+               'Staging SampleOnlineBankStaging'
+                        
             // Create a on-demand synthetic monitor so as to check the UI functionlity
             sh './synthetic-monitor.sh Staging '+  '${JOB_NAME} ${BUILD_NUMBER}' + ' 3000'
             
@@ -168,14 +163,9 @@ node {
         
         dir ('dynatrace-scripts') {
             // push a deployment event on the host with the tag JenkinsInstance:
-            sh './pushdeployment.sh HOST JenkinsInstance "Ken-securityGroup-11, LevelUPSecurityGroup"' +
-               '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} Jenkins '+
-               '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
-            
-            // now I push one on the actual service (it has the tags from our rules)
-            sh './pushdeployment.sh SERVICE DockerService SampleOnlineBankProduction '+
-               '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} Jenkins '+
-               '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
+            sh './pushdeployment.sh HOST JenkinsInstance ' +
+               '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' +
+                'Production SampleOnlineBankProduction'
 
             // Create a sample synthetic monitor so as to check the UI functionlity
            sh './synthetic-monitor.sh Production '+  '${JOB_NAME} ${BUILD_NUMBER}' + ' 3010'
