@@ -36,10 +36,11 @@ if __name__ == "__main__":
       DT_TOKEN = sys.argv[2]
 
       print(DT_URL)
+      tag = sys.argv[3] + "-" + sys.argv[4]
       payload = {
       "group": {
        "tags": [
-           sys.argv[3]
+           tag
           ]
         }
       }
