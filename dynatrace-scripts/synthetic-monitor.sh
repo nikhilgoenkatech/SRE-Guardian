@@ -363,7 +363,7 @@ PAYLOAD=$(cat <<EOF
     }
   },
   "tags": [
-   "S1-$3"
+   "$1-$3"
   ],
   "managementZones": [],
   "automaticallyAssignedApps": [],
