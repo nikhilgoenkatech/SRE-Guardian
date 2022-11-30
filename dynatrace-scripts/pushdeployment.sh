@@ -33,20 +33,22 @@ PAYLOAD=$(cat <<EOF
           }]
       }]
   },
-  "deploymentName" : "$5",
-  "deploymentVersion" : "$6",
-  "deploymentProject" : "$7",
-  "source" : "$8",
-  "ciBackLink" : "$9",
-  "customProperties" : {
-    "JenkinsUrl" : "$10",
-    "BuildUrl" : "$11",
-    "GitCommit" : "$12"
+  "properties": {
+    "dt.event.deployment.release_stage":"$11",
+    "dt.event.deployment.release_product":"$12",
+    "dt.event.deployment.name":"$12" + "$5",
+    "dt.event.deployment.project": "$7",
+    "dt.event.deployment.remediation_action_link": "my-ansible-playbook",
+    "dt.event.deployment.version": "$5",
+    "dt.event.is_rootcause_relevant" : true
+   }
+   "customProperties" : {
+    "JenkinsUrl" : "$8",
+    "BuildUrl" : "$10"
   }
 }
 EOF
 )
 
 echo $PAYLOAD
-echo ${DT_URL}/api/v1/events
-curl -H "Content-Type: application/json" -H "Authorization: Api-Token ${DT_TOKEN}" -X POST -d "${PAYLOAD}" ${DT_URL}/api/v1/events
+curl -H "Content-Type: application/json" -H "Authorization: Api-Token ${DT_TOKEN}" -X POST -d "${PAYLOAD}" ${DT_URL}/api/v2/events/ingest/
