@@ -19,20 +19,9 @@
 # ./dynatrace-scripts/pushtag.sh HOST AWS Environment JenkinsTutorial ${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} Jenkins ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}
 
 PAYLOAD=$(cat <<EOF
-{
-  "eventType": "CUSTOM_DEPLOYMENT",
-  "attachRules" : {
-    "tagRule" : [
-      {
-        "meTypes" : ["$1"],
-        "tags" : [
-          {
-            "context" : "$2",
-            "key" : "$3",
-            "value" : "$4"
-          }]
-      }]
-  },
+{  "eventType": "CUSTOM_DEPLOYMENT",
+  "entitySelector":
+     "type($1), tag($2)",
   "properties": {
     "dt.event.deployment.release_stage":"$11",
     "dt.event.deployment.release_product":"$12",
