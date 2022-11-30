@@ -43,12 +43,12 @@ node {
 
         dir ('dynatrace-scripts') {
             // push a deployment event on the host with the tag JenkinsInstance created using automatic tagging rule
-            sh './pushdeployment.sh HOST CONTEXTLESS JenkinsInstance ' +
+            sh './pushdeployment.sh HOST JenkinsInstance ' +
                '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' + 
                'Jenkins ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
             
             // now I push one on the actual service (it has the tags from our rules)
-            sh './pushdeployment.sh SERVICE CONTEXTLESS DockerService SampleOnlineBankStaging ' + 
+            sh './pushdeployment.sh SERVICE DockerService SampleOnlineBankStaging ' + 
                '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' + 
                'Jenkins ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
             
@@ -63,7 +63,7 @@ node {
     stage('Testing') {
         // lets push an event to dynatrace that indicates that we START a load test
         dir ('dynatrace-scripts') {
-            sh './pushevent.sh SERVICE CONTEXTLESS DockerService SampleOnlineBankStaging ' +
+            sh './pushevent.sh SERVICE DockerService SampleOnlineBankStaging ' +
                '"STARTING Load Test" ${JOB_NAME} "Starting a Load Test as part of the Testing stage"' + 
                ' ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
         }
@@ -84,14 +84,14 @@ node {
 
         // lets push an event to dynatrace that indicates that we STOP a load test
         dir ('dynatrace-scripts') {
-            sh './pushevent.sh SERVICE CONTEXTLESS DockerService SampleOnlineBankStaging '+
+            sh './pushevent.sh SERVICE DockerService SampleOnlineBankStaging '+
                '"STOPPING Load Test" ${JOB_NAME} "Stopping a Load Test as part of the Testing stage" '+
                '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
         }
 
         // lets push an event to dynatrace that indicates that we START a sanity test
         dir ('dynatrace-scripts') {
-            sh './pushevent.sh SERVICE CONTEXTLESS DockerService SampleOnlineBankStaging ' +
+            sh './pushevent.sh SERVICE DockerService SampleOnlineBankStaging ' +
                '"STARTING Sanity-Test" ${JOB_NAME} "Starting Sanity-test of the Testing stage"' + 
                ' ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
         }
@@ -107,7 +107,7 @@ node {
 
         // lets push an event to dynatrace that indicates that we STOP a load test
         dir ('dynatrace-scripts') {
-            sh './pushevent.sh SERVICE CONTEXTLESS DockerService SampleOnlineBankStaging '+
+            sh './pushevent.sh SERVICE DockerService SampleOnlineBankStaging '+
                '"STOPPING Sanity Test" ${JOB_NAME} "Stopping Sanity-test of the Testing stage" '+
                '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
         }
@@ -168,12 +168,12 @@ node {
         
         dir ('dynatrace-scripts') {
             // push a deployment event on the host with the tag JenkinsInstance:
-            sh './pushdeployment.sh HOST CONTEXTLESS JenkinsInstance "Ken-securityGroup-11, LevelUPSecurityGroup"' +
+            sh './pushdeployment.sh HOST JenkinsInstance "Ken-securityGroup-11, LevelUPSecurityGroup"' +
                '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} Jenkins '+
                '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
             
             // now I push one on the actual service (it has the tags from our rules)
-            sh './pushdeployment.sh SERVICE CONTEXTLESS DockerService SampleOnlineBankProduction '+
+            sh './pushdeployment.sh SERVICE DockerService SampleOnlineBankProduction '+
                '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} Jenkins '+
                '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
 
@@ -189,7 +189,7 @@ node {
     stage('WarmUpProduction') {
         // lets push an event to dynatrace that indicates that we START a load test
         dir ('dynatrace-scripts') {
-            sh './pushevent.sh SERVICE CONTEXTLESS DockerService SampleOnlineBankProduction '+
+            sh './pushevent.sh SERVICE DockerService SampleOnlineBankProduction '+
                '"STARTING Load Test" ${JOB_NAME} "Starting a Load Test to warm up new prod deployment" '+
                '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
         }
@@ -204,7 +204,7 @@ node {
 
         // lets push an event to dynatrace that indicates that we STOP a load test
         dir ('dynatrace-scripts') {
-            sh './pushevent.sh SERVICE CONTEXTLESS DockerService SampleOnlineBankProduction '+
+            sh './pushevent.sh SERVICE DockerService SampleOnlineBankProduction '+
                '"STOPPING Load Test" ${JOB_NAME} "Stopping a Load Test as part of the Production warm up phase" '+
                '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
         }
