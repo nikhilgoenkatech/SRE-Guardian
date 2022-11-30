@@ -69,7 +69,7 @@ node {
         }
         dir('dynatrace-scripts') {
             // Trigger the on-demand synthetic monitor as part of the Testing cycle
-            env.execution_id = sh(script: 'python3 trigger_syn_monitor.py ${DT_URL} ${DT_TOKEN} ${BUILD_NUMBER}', returnStatus: true)
+            env.execution_id = sh(script: 'python3 trigger_syn_monitor.py ${DT_URL} ${DT_TOKEN} Staging ${BUILD_NUMBER}', returnStatus: true)
 
         }
         
@@ -122,7 +122,7 @@ node {
                 STATUS = sh 'python3 check_synthetic_run.py ${DT_URL} ${DT_TOKEN} env.execution_id'
             } catch (Exception e) {
                 if (STATUS) {
-                    error("Synthetic monitor has failed. Aboritig the build!!")
+                    error("Synthetic monitor has failed. Aborting the build!!")
                     currentBuild.result = 'ABORTED'
                     sh "exit ${STATUS}"
                 }
