@@ -1,0 +1,99 @@
+import sys
+import json
+import requests
+import traceback
+
+###################################################################################################
+##           Function to modify SLO definition as per requirement/sent attributes 
+##################################################################################################
+def populate_payload(payload):
+  try:
+    payload["name"]=payload["name"].replace("$3",sys.argv[3])
+    payload["metricName"] = payload["metricName"].replace("$5",sys.argv[5])
+    payload["metricExpression"] = payload["metricExpression"].replace("$3",sys.argv[3]).replace("$4",sys.argv[4])
+
+  except Exception as e:
+    print("Exception in populate_payload: " + str(e))
+    traceback.print_exc()
+
+  finally:
+    return payload
+
+#####################################################################################
+##                 Function to create SLOs - Response Time and Failure Rate
+#######################################################################################
+def create_slo(DT_URL, DT_TOKEN):
+  #Response time SLO definition  
+  RSP_PAYLOAD = {
+    "enabled": "true",
+    "name": "$3 - Response Time SLO",
+    "description": "Response Time SLO",
+    "metricName": "response_time_$5",
+    "metricExpression": "((builtin:service.response.time:filter(in(\"dt.entity.service\",entitySelector(\"type(SERVICE),tag($4:$3)\"))):avg:toUnit(MicroSecond,MilliSecond):partition(latency,value(good,lt(36.17))):splitBy():count:fold)/(builtin:service.response.time:filter(in(\"dt.entity.service\",entitySelector(\"type(SERVICE),tag($4:$3)\"))):avg:toUnit(MicroSecond,MilliSecond):splitBy():count:fold)*(100))",
+    "evaluationType": "AGGREGATE",
+    "filter": "type(\"SERVICE\")",
+    "target": 95,
+    "warning": 97.5,
+    "errorBudgetBurnRate": {
+      "fastBurnThreshold": 1.5,
+      "burnRateVisualizationEnabled": "true"
+    },
+    "timeframe": "-1d"
+  } 
+  #Failure Rate SLO definition  
+  FAILURE_PAYLOAD = {
+    "enabled": "true",
+    "name": "$3 - Failure Rate",
+    "description": "Failure Rate",
+    "metricName": "failure_rate_$5",
+    "metricExpression":"(100)*(builtin:service.errors.total.successCount:filter(in(\"dt.entity.service\",entitySelector(\"type(SERVICE),tag($4:$3)\"))):splitBy())/(builtin:service.requestCount.total:filter(in(\"dt.entity.service\",entitySelector(\"type(SERVICE),tag($4:$3)\"))):splitBy())",
+    "evaluationType": "AGGREGATE",
+    "filter": "type(\"SERVICE\")",
+    "target": 95,
+    "warning": 97.5,
+    "errorBudgetBurnRate": {
+      "fastBurnThreshold": 1.5,
+      "burnRateVisualizationEnabled": "true"
+    },
+    "timeframe": "-1d"
+  }
+
+  try:
+    data = {}
+
+    query = str(DT_URL) + "/api/v2/slo/"
+    post_param = {'Content-Type':'application/json', 'Authorization':'Api-Token {}'.format(DT_TOKEN)}
+
+    populate_data = requests.post(query, headers = post_param, data = json.dumps(populate_payload(RSP_PAYLOAD)))
+    print(populate_data.status_code)
+
+    populate_data = requests.post(query, headers = post_param, data = json.dumps(populate_payload(FAILURE_PAYLOAD)))
+    print(json.dumps(populate_payload(FAILURE_PAYLOAD)))
+    print(populate_data.status_code)
+
+    if populate_data.status_code == 401:
+      msg = "Auth Error"
+
+  except Exception as e:
+    print("Exception in create_slos: " + str(e))
+    traceback.print_exc()
+
+  finally:
+    print("Completed create_slos execution")
+    
+#######################################################################################
+##                    Function main
+#######################################################################################
+if __name__ == "__main__":
+  try:
+      DT_URL = sys.argv[1]
+      DT_TOKEN = sys.argv[2]
+
+      create_slo(DT_URL, DT_TOKEN)
+
+  except Exception as e:
+    print("Exception in main " + str(e))
+
+  finally:
+    print("Succesfully completed main")
+    sys.exit()
