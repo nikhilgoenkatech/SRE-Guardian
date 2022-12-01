@@ -51,7 +51,7 @@ node {
             sh './synthetic-monitor.sh Staging '+  '${JOB_NAME} ${BUILD_NUMBER}' + ' 3000'
             
             // Create SLOs for the staging environment
-            sh "python3.6 create_slo.py ${DT_URL} ${DT_TOKEN} SampleOnlineBankStaging DockerService staging"
+            sh "python3 create_slo.py ${DT_URL} ${DT_TOKEN} SampleOnlineBankStaging DockerService staging"
             
             // Create a sample dashboard for the staging stage
             sh './create-dashboard.sh Staging '+  '${JOB_NAME} ${BUILD_NUMBER}' + ' DockerService SampleOnlineBankStaging'
@@ -174,7 +174,7 @@ node {
            sh './synthetic-monitor.sh Production '+  '${JOB_NAME} ${BUILD_NUMBER}' + ' 3010'
             
             // Create SLOs for the staging environment
-            sh "python3.6 create_slo.py ${DT_URL} ${DT_TOKEN} SampleOnlineBankProduction DockerService prod"
+            sh "python3 create_slo.py ${DT_URL} ${DT_TOKEN} SampleOnlineBankProduction DockerService prod"
                         
           // Create a sample dashboard for the staging stage
           sh './create-dashboard.sh Production '+  '${JOB_NAME} ${BUILD_NUMBER}' + ' DockerService SampleOnlineBankProduction'    
