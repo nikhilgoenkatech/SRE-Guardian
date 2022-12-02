@@ -68,38 +68,8 @@ if __name__ == "__main__":
 
      #Create dashboard
      import subprocess
-     subprocess.call(["sh","./create-dashboard.sh",DT_URL,DT_TOKEN,sys.argv[3],sys.argv[4],sys.argv[5],sys.argv[6],sys.argv[7],response_slo_id, failure_slo_id, db_response_slo_id, db_failure_slo_id, app_response_slo_id, app_failure_slo_id])
-    
-     #DASHBOARD_PAYLOAD["dashboardMetadata"]["name"] = sys.argv[4] + sys.argv[5] + ":" + sys.argv[6]
-     #for tile in DASHBOARD_PAYLOAD["tiles"]:
-     #  #Replace the slo tiles with the id of slos  
-     #  if DASHBOARD_PAYLOAD["tiles"][tile]["assignedEntities"] = "response_slo_id":
-     #    DASHBOARD_PAYLOAD["tiles"][tile]["assignedEntities"] = response_slo_id
-     #  elif DASHBOARD_PAYLOAD["tiles"][tile]["assignedEntities"] = "db_response_slo_id":
-     #    DASHBOARD_PAYLOAD["tiles"][tile]["assignedEntities"] = db_response_slo_id
-     #  elif DASHBOARD_PAYLOAD["tiles"][tile]["assignedEntities"] = "app_response_slo_id":
-     #    DASHBOARD_PAYLOAD["tiles"][tile]["assignedEntities"] = app_response_slo_id
-
-     #  elif DASHBOARD_PAYLOAD["tiles"][tile]["assignedEntities"] = "failure_slo_id":
-     #    DASHBOARD_PAYLOAD["tiles"][tile]["assignedEntities"] = failure_slo_id 
-     #  elif DASHBOARD_PAYLOAD["tiles"][tile]["assignedEntities"] = "db_failure_slo_id":
-     #    DASHBOARD_PAYLOAD["tiles"][tile]["assignedEntities"] = db_failure_slo_id 
-     #  elif DASHBOARD_PAYLOAD["tiles"][tile]["assignedEntities"] = "app_failure_slo_id":
-     #    DASHBOARD_PAYLOAD["tiles"][tile]["assignedEntities"] = app_failure_slo_id 
-     # 
-     #  DASHBOARD_PAYLOAD 
-     #  DASHBOARD_PAYLOAD["tiles"][4]["name"]["filtersPerEntityType"]["AUTO_TAGS"][0] = "\"" + sys.argv[7] + sys.argv[3] + "\""
-     #json = DASHBOARD_PAYLOAD.replace("$1",sys.argv[4]).replace("$2",sys.argv[5]).replace("$3",sys.argv[6]).replace("$4",sys.argv[7]).replace("$5",sys.argv[3])
-     #json_obj = json_obj.replace("response_slo_id",str(response_slo_id)).replace("db_response_slo_id",str(db_response_slo_id)).replace("app_response_slo_id",str(app_response_slo_id))
-     #json_obj = json_obj.replace("failure_slo_id",str(failure_slo_id)).replace("db_failure_slo_id",str(db_failure_slo_id)).replace("app_failure_slo_id",str(app_failure_slo_id))
-
-
-     #query = str(DT_URL) + "/api/config/v1/dashboards/"
-     #post_param = {'Content-Type':'application/json', 'Authorization':'Api-Token {}'.format(DT_TOKEN)}
-     #populate_data = requests.post(query, headers = post_param, data = json.dumps(json_obj))
-
-     #print(json.dumps(json_str))
-     #print(populate_data.status_code)
+     subprocess.call(["sh","./create-dashboard.sh",DT_URL,DT_TOKEN,sys.argv[3],sys.argv[4],sys.argv[5],sys.argv[6],sys.argv[7],response_slo_id,failure_slo_id,db_response_slo_id,db_failure_slo_id,app_response_slo_id,app_failure_slo_id])
+   
   except Exception as e:
     print("Exception in main " + str(e))
 
