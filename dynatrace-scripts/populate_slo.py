@@ -68,7 +68,7 @@ if __name__ == "__main__":
 
      #Create dashboard
      import subprocess
-     subprocess.call(["sh","./create-dashboard.sh",DT_URL,DT_TOKEN,sys.argv[3],sys.argv[4],sys.argv[5],sys.argv[6],sys.argv[7]])
+     subprocess.call(["sh","./create-dashboard.sh",DT_URL,DT_TOKEN,sys.argv[3],sys.argv[4],sys.argv[5],sys.argv[6],sys.argv[7]],response_slo_id, failure_slo_id, db_response_slo_id, db_failure_slo_id, app_response_slo_id, app_failure_slo_id)
     
      #DASHBOARD_PAYLOAD["dashboardMetadata"]["name"] = sys.argv[4] + sys.argv[5] + ":" + sys.argv[6]
      #for tile in DASHBOARD_PAYLOAD["tiles"]:
