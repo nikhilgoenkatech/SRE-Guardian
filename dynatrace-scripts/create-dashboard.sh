@@ -77,7 +77,7 @@ PAYLOAD=$(cat <<EOF
         "filtersPerEntityType": {
           "SERVICE": {
             "AUTO_TAGS": [
-              "$4:$3"
+              "$7:$3"
             ]
           }
         }
@@ -750,7 +750,7 @@ PAYLOAD=$(cat <<EOF
                 "nestedFilters": [],
                 "criteria": [
                   {
-                    "value": "$4:$3",
+                    "value": "$7:$3",
                     "evaluator": "IN"
                   }
                 ]
@@ -844,7 +844,7 @@ PAYLOAD=$(cat <<EOF
         "resolution": ""
       },
       "metricExpressions": [
-        "resolution=Inf&(builtin:service.response.time:filter(and(or(in(\"dt.entity.service\",entitySelector(\"type(service),tag(~\"$4:$3~\")\"))))):splitBy():avg:auto:sort(value(avg,descending)):limit(100)):limit(100):names"
+        "resolution=Inf&(builtin:service.response.time:filter(and(or(in(\"dt.entity.service\",entitySelector(\"type(service),tag(~\"$7:$3~\")\"))))):splitBy():avg:auto:sort(value(avg,descending)):limit(100)):limit(100):names"
       ]
     },
     {
@@ -1331,7 +1331,7 @@ PAYLOAD=$(cat <<EOF
                 "nestedFilters": [],
                 "criteria": [
                   {
-                    "value": "$4:$3",
+                    "value": "$7:$3",
                     "evaluator": "IN"
                   }
                 ]
@@ -1408,7 +1408,7 @@ PAYLOAD=$(cat <<EOF
         "resolution": "1m"
       },
       "metricExpressions": [
-        "resolution=Inf&(builtin:service.errors.total.rate:filter(and(or(in(\"dt.entity.service\",entitySelector(\"type(service),tag(~\"$4:$3~\")\"))))):splitBy():avg:auto:sort(value(avg,descending)):limit(100)):limit(100):names"
+        "resolution=Inf&(builtin:service.errors.total.rate:filter(and(or(in(\"dt.entity.service\",entitySelector(\"type(service),tag(~\"$7:$3~\")\"))))):splitBy():avg:auto:sort(value(avg,descending)):limit(100)):limit(100):names"
       ]
     }
   ]
