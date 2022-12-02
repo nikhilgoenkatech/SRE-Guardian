@@ -9,7 +9,7 @@ PAYLOAD=$(cat <<EOF
     "clusterVersion": "1.257.0.20221125-212251"
   },
   "dashboardMetadata": {
-    "name": "$1 $2:$3",
+    "name": "$4 $3:$6",
     "shared": true,
     "owner": "dynatraceone@dynatrace.com",
     "preset": true,
