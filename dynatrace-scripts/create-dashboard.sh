@@ -341,7 +341,7 @@ PAYLOAD=$(cat <<EOF
         "timeframe": "-1h"
       },
       "assignedEntities": [
-        "response_slo_id"
+        "$8"
       ],
       "metric": "METRICS=true;LEGEND=false;PROBLEMS=false;decimals=10;customTitle=Service Response Time SLO;"
     },
@@ -384,7 +384,7 @@ PAYLOAD=$(cat <<EOF
         "timeframe": "-1d"
       },
       "assignedEntities": [
-        "failure_slo_id"
+        "$9"
       ],
       "metric": "METRICS=true;LEGEND=false;PROBLEMS=false;decimals=1;customTitle=Service Failure SLO;"
     },
@@ -488,7 +488,7 @@ PAYLOAD=$(cat <<EOF
         "timeframe": "-1h"
       },
       "assignedEntities": [
-        "db_response_slo_id"
+        "$10"
       ],
       "metric": "METRICS=true;LEGEND=false;PROBLEMS=false;decimals=1;customTitle=Database Response Time SLO;"
     },
@@ -518,7 +518,7 @@ PAYLOAD=$(cat <<EOF
         "timeframe": "-1d"
       },
       "assignedEntities": [
-        "db_failure_slo_id"
+        "$11"
       ],
       "metric": "METRICS=true;LEGEND=false;PROBLEMS=false;decimals=10;customTitle=Database Failure SLO;"
     },
@@ -647,7 +647,7 @@ PAYLOAD=$(cat <<EOF
         "timeframe": "-1d"
       },
       "assignedEntities": [
-        "app_response_slo_id"
+        "$12"
       ],
       "metric": "METRICS=true;LEGEND=false;PROBLEMS=false;decimals=10;customTitle=Application Performance SLO;"
     },
@@ -677,7 +677,7 @@ PAYLOAD=$(cat <<EOF
         "timeframe": "-1d"
       },
       "assignedEntities": [
-        "app_failure_slo_id"
+        "$13"
       ],
       "metric": "METRICS=true;LEGEND=false;PROBLEMS=false;decimals=10;customTitle=Application Failure SLO;"
     },
