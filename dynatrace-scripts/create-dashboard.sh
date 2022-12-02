@@ -488,7 +488,7 @@ PAYLOAD=$(cat <<EOF
         "timeframe": "-1h"
       },
       "assignedEntities": [
-        "$10"
+        "${10}"
       ],
       "metric": "METRICS=true;LEGEND=false;PROBLEMS=false;decimals=1;customTitle=Database Response Time SLO;"
     },
@@ -518,7 +518,7 @@ PAYLOAD=$(cat <<EOF
         "timeframe": "-1d"
       },
       "assignedEntities": [
-        "$11"
+        "${11}"
       ],
       "metric": "METRICS=true;LEGEND=false;PROBLEMS=false;decimals=10;customTitle=Database Failure SLO;"
     },
@@ -647,7 +647,7 @@ PAYLOAD=$(cat <<EOF
         "timeframe": "-1d"
       },
       "assignedEntities": [
-        "$12"
+        "${12}"
       ],
       "metric": "METRICS=true;LEGEND=false;PROBLEMS=false;decimals=10;customTitle=Application Performance SLO;"
     },
@@ -677,7 +677,7 @@ PAYLOAD=$(cat <<EOF
         "timeframe": "-1d"
       },
       "assignedEntities": [
-        "$13"
+        "${13}"
       ],
       "metric": "METRICS=true;LEGEND=false;PROBLEMS=false;decimals=10;customTitle=Application Failure SLO;"
     },
