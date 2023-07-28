@@ -342,7 +342,7 @@ PAYLOAD=$(cat <<EOF
     ]
   },
   "locations": [
-    "GEOLOCATION-6CACEA9089099635"
+    "GEOLOCATION-2FD31C834DE4D601"
   ],
   "anomalyDetection": {
     "outageHandling": {
