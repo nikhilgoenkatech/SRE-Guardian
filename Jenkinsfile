@@ -62,7 +62,7 @@ node {
         // lets push an event to dynatrace that indicates that we START a load test
         dir ('dynatrace-scripts') {
             sh './pushevent.sh SERVICE DockerService SampleOnlineBankStaging ' +
-               '"STARTING Load Test" ${JOB_NAME} "Starting a Load Test as part of the Testing stage"' + 
+               '"STARTING Load Test" ${JOB_NAME} "Starting a Load Test as part of Staging"' + 
                ' ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
         }
         dir('dynatrace-scripts') {
