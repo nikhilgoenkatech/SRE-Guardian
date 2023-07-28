@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 # Bash Script that will push a Custom Annotation event to Dynatrace via ${DT_URL}/api/v1/events
 # The script also assumes the ${DT_TOKEN} contains your API-Token!
@@ -18,17 +18,24 @@
 # Pushing same Custom Deployment event using Jenkins Propeties
 # ./dynatrace-scripts/pushevent.sh SERVICE CONTEXTLESS DockerService SampleNodeJsStaging "Starting Load Test" ${JOB_NAME} "Starting a JMeter Load Testing as part of the Testing stage" ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}
 
+
 PAYLOAD=$(cat <<EOF
 {  "eventType": "CUSTOM_ANNOTATION",
   "entitySelector": "type($1), tag($2:$3)",
-  "title":"$4",
+  "title":"\"$4\"",
   "customProperties" : {
-  "JenkinsUrl" : "$6",
-  "BuildUrl" : "$8"
+  "JenkinsUrl" : "$5",
+  "BuildUrl" : "$7"
   }
 }
 EOF
 )
-
 echo $PAYLOAD
-curl -H "Content-Type: application/json" -H "Authorization: Api-Token ${DT_TOKEN}" -X POST -d "${PAYLOAD}" ${DT_URL}/api/v2/events/ingest/
+
+curl -X 'POST' \
+     "${DT_URL}/api/v2/events/ingest/" \
+     -H "accept: application/json; charset=utf-8" \
+     -H "Content-Type: application/json; charset=utf-8" \
+     -H "Authorization: Api-Token ${DT_TOKEN}" \
+     -d "${PAYLOAD}"
+
