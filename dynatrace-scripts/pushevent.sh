@@ -23,9 +23,10 @@ PAYLOAD=$(cat <<EOF
 {  "eventType": "CUSTOM_ANNOTATION",
   "entitySelector": "type($1), tag($2:$3)",
   "title":"\"$4\"",
-  "customProperties" : {
+  "properties" : {
   "JenkinsUrl" : "$5",
-  "BuildUrl" : "$7"
+  "BuildUrl" : "$7",
+  "Description": "$6"
   }
 }
 EOF
