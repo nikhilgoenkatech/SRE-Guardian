@@ -112,41 +112,39 @@ node {
     }
     
     stage('ValidateStaging') {
-        dir ('dynatrace-scripts') {              
-            // Validate if synthetic monitor ran into any issues 
-            echo "Checking Sythetic monitor status"
-            try {
-              STATUS = 0
-                STATUS = sh 'python3 check_synthetic_run.py ${DT_URL} ${DT_TOKEN} env.execution_id'
-            } catch (Exception e) {
-                if (STATUS) {
-                    error("Synthetic monitor has failed. Aborting the build!!")
-                    currentBuild.result = 'ABORTED'
-                    sh "exit ${STATUS}"
+    //Wait for Dynatrace Workflow to approve the build to next stage
+       steps {
+             timeout(time: 15, unit: 'MINUTES') {
+             input(id: 'promotionInput', message: 'Do you want to promote to production?', parameters: [
+                        [$class: 'BooleanParameterDefinition', name: 'promote', defaultValue: false, description: 'Approve promotion to production?']
+              ])
+             }
+            }
+            post {
+                always {
+                    script {
+                        if (currentBuild.result == 'TIMEOUT') {
+                            // Handle the case when the external script doesn't provide approval in time
+                            error('Promotion approval timeout. Aborting build.')
+                        } else if (params.promote) {
+                            sh 'echo "Promoting to production..."'
+                        } else {
+                            error('Promotion to production was not approved.')
+                        }
+                    }
+                }
+
+                script {
+                    if (params.promote) {
+                        // Your steps to promote to production here
+                        sh 'echo "Promoting to production..."'
+                    } else {
+                        // If not approved, terminate the build
+                        currentBuild.result = 'ABORTED'
+                        error('Promotion to production was not approved.')
+                    }
                 }
             }
-            
-            echo "Will look for any open problems"            
-            // lets see if Dynatrace AI found problems -> if so - we can stop the pipeline!
-            try {
-                 DYNATRACE_PROBLEM_COUNT = 0
-                 DYNATRACE_PROBLEM_COUNT = sh 'python3 checkforproblems.py ${DT_URL} ${DT_TOKEN} DockerService:SampleOnlineBankStaging'
-            } catch (Exception e) {
-                if (DYNATRACE_PROBLEM_COUNT) {
-                   error("Dynatrace opened some problem. ABORTING the build!!")
-                   currentBuild.result = 'ABORTED'
-                   sh "exit ${DYNATRACE_PROBLEM_COUNT}"                 
-               }
-            }
-        }
-        
-        // now lets generate a report using our CLI and lets generate some direct links back to dynatrace
-        dir ('dynatrace-scripts') {
-            sh 'python3 make_api_call.py ${DT_URL} ${DT_TOKEN} DockerService:SampleOnlineBankStaging '+
-                        'service.responsetime'
-            sh 'mv Test_report.csv Test_report_staging.csv'
-            archiveArtifacts artifacts: 'Test_report_staging.csv', fingerprint: true
-        }
     }
     
     stage('DeployProduction') {
