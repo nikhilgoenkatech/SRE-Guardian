@@ -112,42 +112,32 @@ node {
     }
     
     stage('ValidateStaging') {
-    //Wait for Dynatrace Workflow to approve the build to next stage
-       steps {
-             timeout(time: 15, unit: 'MINUTES') {
-             input(id: 'promotionInput', message: 'Do you want to promote to production?', parameters: [
-                        [$class: 'BooleanParameterDefinition', name: 'promote', defaultValue: false, description: 'Approve promotion to production?']
-              ])
-             }
+        try {
+            // Wait for the external script's approval with a timeout of 15 minutes
+            timeout(time: 15, unit: 'MINUTES') {
+                // Pause the pipeline and wait for the approval
+                def approval = input(
+                    id: 'promotionInput',
+                    message: 'Do you want to promote to production?',
+                    parameters: [
+                        [$class: 'BooleanParameter', name: 'promote', defaultValue: false, description: 'Approve promotion to production?']
+                    ]
+                )
+                // Store the approval result in a variable to use it later
+                def promotionDecision = approval ? 'approve' : 'abort'
+                echo "Promotion decision: ${promotionDecision}"
+                env.PROMOTION_DECISION = promotionDecision
             }
-            post {
-                always {
-                    script {
-                        if (currentBuild.result == 'TIMEOUT') {
-                            // Handle the case when the external script doesn't provide approval in time
-                            error('Promotion approval timeout. Aborting build.')
-                        } else if (params.promote) {
-                            sh 'echo "Promoting to production..."'
-                        } else {
-                            error('Promotion to production was not approved.')
-                        }
-                    }
-                }
-
-                script {
-                    if (params.promote) {
-                        // Your steps to promote to production here
-                        sh 'echo "Promoting to production..."'
-                    } else {
-                        // If not approved, terminate the build
-                        currentBuild.result = 'ABORTED'
-                        error('Promotion to production was not approved.')
-                    }
-                }
-            }
+        } catch (Exception e) {
+            echo 'Jenkins build timed out. Backend script did not respond within the specified timeout.'
+            currentBuild.result = 'FAILURE'
+        }
     }
     
     stage('DeployProduction') {
+      when {
+        expression { env.PROMOTION_DECISION == 'approve' }
+        
          // first we clean production        
         sh 'docker ps -f name=SampleOnlineBankProduction -q | xargs --no-run-if-empty docker container stop'
         sh 'docker container ls -a -fname=SampleOnlineBankProduction -q | xargs -r docker container rm'
@@ -176,8 +166,9 @@ node {
                         
           // Create a sample dashboard for the staging stage
             sh "python3 populate_slo.py ${DT_URL} ${DT_TOKEN} SampleOnlineBankProduction ${JOB_NAME} prod ${BUILD_NUMBER} DockerService"            
-        }        
-    }    
+        }
+      }
+    } 
     
     stage('WarmUpProduction') {
         // lets push an event to dynatrace that indicates that we START a load test
