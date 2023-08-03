@@ -112,31 +112,42 @@ node {
     }
     
     stage('ValidateStaging') {
-      sh 'echo "ValidateStaging"'
-      script {
-        timeout(time: 15, unit: 'MINUTES') {
-          try {
-             sh 'echo "Timeout"'
-             // Wait for the external script's approval with a timeout of 15 minutes
-             // Pause the pipeline and wait for the approval
-             def approval = input(
-                id: 'promotionInput',
-                message: 'Do you want to promote to production?',
-                parameters: [
-                    [$class: 'BooleanParameter', name: 'promote', defaultValue: false, description: 'Approve promotion to production?']
-                   ]
-                 )
-                // Store the approval result in a variable to use it later
-                def promotionDecision = approval ? 'approve' : 'abort'
-                echo "Promotion decision: ${promotionDecision}"
-                env.PROMOTION_DECISION = promotionDecision
-          } catch (Exception e) {
-             echo 'Jenkins build timed out. Backend script did not respond within the specified timeout.'
-             currentBuild.result = 'FAILURE'
-          }
-        }
-      }
+                script {
+                    timeout(time: 1, unit: 'MINUTES') {
+                        // Loop to wait for the external script's approval or timeout
+                        def startTime = System.currentTimeMillis()
+                        def timeoutMinutes = 1
+                        def approvalReceived = false
+
+                        // Loop to wait for approval
+                        while (!approvalReceived) {
+                            // Check if timeout has been reached
+                            if ((System.currentTimeMillis() - startTime) >= (timeoutMinutes * 60 * 1000)) {
+                                echo 'Jenkins build timed out. Backend script did not respond within the specified timeout.'
+                                currentBuild.result = 'FAILURE'
+                                break
+                            }
+
+                            // Poll the external script for approval status (you can replace this with your actual check)
+                            // For demonstration purposes, we use a simple sleep here.
+                            sleep(30)
+
+                            // Check if the external script has provided approval (you can replace this with your actual logic)
+                            // For demonstration purposes, we assume "approve" is received after 2 iterations.
+                            if (env.iteration == 2) {
+                                approvalReceived = true
+                                PROMOTION_DECISION = 'approve'
+                            }
+
+                            // Increment the iteration counter (this should be replaced with your actual logic)
+                            env.iteration = env.iteration ? env.iteration.toInteger() + 1 : 1
+                        }
+
+                        echo "Promotion decision: ${PROMOTION_DECISION}"
+                }
+            }
     }
+
     
     stage('DeployProduction') {
       if (env.PROMOTION_DECISION == 'approve') {
