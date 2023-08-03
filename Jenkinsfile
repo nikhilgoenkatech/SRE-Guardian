@@ -114,7 +114,6 @@ node {
     stage('ValidateStaging') {
         try {
             // Wait for the external script's approval with a timeout of 15 minutes
-            timeout(time: 15, unit: 'MINUTES') {
                 // Pause the pipeline and wait for the approval
                 def approval = input(
                     id: 'promotionInput',
@@ -127,7 +126,6 @@ node {
                 def promotionDecision = approval ? 'approve' : 'abort'
                 echo "Promotion decision: ${promotionDecision}"
                 env.PROMOTION_DECISION = promotionDecision
-            }
         } catch (Exception e) {
             echo 'Jenkins build timed out. Backend script did not respond within the specified timeout.'
             currentBuild.result = 'FAILURE'
