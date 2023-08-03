@@ -113,26 +113,28 @@ node {
     
     stage('ValidateStaging') {
       sh 'echo "ValidateStaging"'
-      timeout(time: 15, unit: 'MINUTES') {
-        try {
-            sh 'echo "Timeout"'
-            // Wait for the external script's approval with a timeout of 15 minutes
-                // Pause the pipeline and wait for the approval
-                def approval = input(
-                    id: 'promotionInput',
-                    message: 'Do you want to promote to production?',
-                    parameters: [
-                        [$class: 'BooleanParameter', name: 'promote', defaultValue: false, description: 'Approve promotion to production?']
-                    ]
-                )
+      script {  
+        timeout(time: 15, unit: 'MINUTES') {
+          try {
+             sh 'echo "Timeout"'
+             // Wait for the external script's approval with a timeout of 15 minutes
+             // Pause the pipeline and wait for the approval
+             def approval = input(
+                id: 'promotionInput',
+                message: 'Do you want to promote to production?',
+                parameters: [
+                    [$class: 'BooleanParameter', name: 'promote', defaultValue: false, description: 'Approve promotion to production?']
+                   ]
+                 )
                 // Store the approval result in a variable to use it later
                 def promotionDecision = approval ? 'approve' : 'abort'
                 echo "Promotion decision: ${promotionDecision}"
                 env.PROMOTION_DECISION = promotionDecision
+            }
+          } catch (Exception e) {
+             echo 'Jenkins build timed out. Backend script did not respond within the specified timeout.'
+             currentBuild.result = 'FAILURE'
           }
-        } catch (Exception e) {
-            echo 'Jenkins build timed out. Backend script did not respond within the specified timeout.'
-            currentBuild.result = 'FAILURE'
         }
     }
     
