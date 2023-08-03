@@ -112,10 +112,10 @@ node {
     }
     
     stage('ValidateStaging') {
-      echo "ValidateStaging"  
+      sh 'echo "ValidateStaging"'
       timeout(time: 15, unit: 'MINUTES') {
         try {
-            echo "Timeout"
+            sh 'echo "Timeout"'
             // Wait for the external script's approval with a timeout of 15 minutes
                 // Pause the pipeline and wait for the approval
                 def approval = input(
@@ -138,7 +138,7 @@ node {
     
     stage('DeployProduction') {
       if (env.PROMOTION_DECISION == 'approve') {
-        echo "$(env.PROMOTION_DECISION)"  
+        sh 'echo "$(env.PROMOTION_DECISION)"'
         // first we clean production        
         sh 'docker ps -f name=SampleOnlineBankProduction -q | xargs --no-run-if-empty docker container stop'
         sh 'docker container ls -a -fname=SampleOnlineBankProduction -q | xargs -r docker container rm'
