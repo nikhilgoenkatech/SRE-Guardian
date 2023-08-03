@@ -130,7 +130,6 @@ node {
                 def promotionDecision = approval ? 'approve' : 'abort'
                 echo "Promotion decision: ${promotionDecision}"
                 env.PROMOTION_DECISION = promotionDecision
-            }
           } catch (Exception e) {
              echo 'Jenkins build timed out. Backend script did not respond within the specified timeout.'
              currentBuild.result = 'FAILURE'
