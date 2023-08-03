@@ -8,7 +8,7 @@ node {
     
     stage('Checkout') {
         // Checkout our application source code
-        git url: 'https://github.com/nikhilgoenkatech/JenkinsBankApp.git'
+        git url: 'https://github.com/nikhilgoenkatech/SRE-Guardian.git'
     }
 
     stage('Build') {
