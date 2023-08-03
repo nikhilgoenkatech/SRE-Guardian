@@ -113,7 +113,7 @@ node {
     
     stage('ValidateStaging') {
       sh 'echo "ValidateStaging"'
-      script {  
+      script {
         timeout(time: 15, unit: 'MINUTES') {
           try {
              sh 'echo "Timeout"'
@@ -135,6 +135,7 @@ node {
              currentBuild.result = 'FAILURE'
           }
         }
+      }
     }
     
     stage('DeployProduction') {
