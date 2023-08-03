@@ -112,42 +112,25 @@ node {
     }
     
     stage('ValidateStaging') {
-                script {
-                    timeout(time: 1, unit: 'MINUTES') {
-                        // Loop to wait for the external script's approval or timeout
-                        def startTime = System.currentTimeMillis()
-                        def timeoutMinutes = 1
-                        def approvalReceived = true
+        script {
+            timeout(time: 1, unit: 'MINUTES') {
+            // Loop to wait for the Dynatrace workflow for approval or in case, it does not respond, proceed with timeout and terminate the build
+            def startTime = System.currentTimeMillis()
+            def timeoutMinutes = 1
+            def approvalReceived = false
 
-                        // Loop to wait for approval
-                        while (!approvalReceived) {
-                            // Check if timeout has been reached
-                            if ((System.currentTimeMillis() - startTime) >= (timeoutMinutes * 60 * 1000)) {
-                                echo 'Jenkins build timed out. Did not hear from Dynatrace Workflow.'
-                                currentBuild.result = 'FAILURE'
-                                break
-                            }
-
-                            // Poll the external script for approval status (you can replace this with your actual check)
-                            // For demonstration purposes, we use a simple sleep here.
-                            sleep(30)
-
-                            // Check if the external script has provided approval (you can replace this with your actual logic)
-                            // For demonstration purposes, we assume "approve" is received after 2 iterations.
-                            if (env.iteration == 2) {
-                                approvalReceived = true
-                                PROMOTION_DECISION = 'approve'
-                            }
-
-                            // Increment the iteration counter (this should be replaced with your actual logic)
-                            env.iteration = env.iteration ? env.iteration.toInteger() + 1 : 1
-                        }
-
-                        echo "Promotion decision: ${PROMOTION_DECISION}"
+            while (approvalReceived == false) {            
+                if ((System.currentTimeMillis() - startTime) >= (timeoutMinutes * 60 * 1000)) {
+                        echo 'Build timed out. Did not hear from Dynatrace Workflow.'
+                        currentBuild.result = 'FAILURE'
+                        break
+                    }
+                    sleep(30)
                 }
+                echo "Promotion decision: ${PROMOTION_DECISION}"
             }
+        }
     }
-
     
     stage('DeployProduction') {
       if (env.PROMOTION_DECISION == 'approve') {
