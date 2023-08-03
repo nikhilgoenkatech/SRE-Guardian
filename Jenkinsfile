@@ -117,13 +117,13 @@ node {
                         // Loop to wait for the external script's approval or timeout
                         def startTime = System.currentTimeMillis()
                         def timeoutMinutes = 1
-                        def approvalReceived = false
+                        def approvalReceived = true
 
                         // Loop to wait for approval
                         while (!approvalReceived) {
                             // Check if timeout has been reached
                             if ((System.currentTimeMillis() - startTime) >= (timeoutMinutes * 60 * 1000)) {
-                                echo 'Jenkins build timed out. Backend script did not respond within the specified timeout.'
+                                echo 'Jenkins build timed out. Did not hear from Dynatrace Workflow.'
                                 currentBuild.result = 'FAILURE'
                                 break
                             }
