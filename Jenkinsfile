@@ -117,7 +117,7 @@ node {
             // Loop to wait for the Dynatrace workflow for approval or in case, it does not respond, proceed with timeout and terminate the build
             def startTime = System.currentTimeMillis()
             def timeoutMinutes = 1
-            def approvalReceived = true
+            def approvalReceived = false
 
             while (approvalReceived == false) {            
                 if ((System.currentTimeMillis() - startTime) >= (timeoutMinutes * 60 * 1000)) {
@@ -127,7 +127,7 @@ node {
                     }
                     sleep(30)
                 }
-                //echo "Promotion decision: ${PROMOTION_DECISION}"
+                echo "Promotion decision: ${env.PROMOTION_DECISION}"
             }
         }
     }
