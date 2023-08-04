@@ -127,20 +127,25 @@ node {
 
                 try {
                     // Check if the external script has given the approval using Jenkins API
-                    def approvalResponse = httpRequest(
-                     url: "${JENKINS_URL}/job/${JOB_NAME}/${BUILD_NUMBER}/input/promotionInput/api/json",
-                     authentication: "${JENKINS_USER}:${JENKINS_API_TOKEN}",                       
-                     customHeaders: [[
-                        name: "Authorization",
-                        value: "Basic ${auth}"
-                     ]])
-                    def approvalData = readJSON(text: approvalResponse.content)
+                    //def approvalResponse = httpRequest(
+                    // url: "${JENKINS_URL}/job/${JOB_NAME}/${BUILD_NUMBER}/input/promotionInput/api/json",
+                    // authentication: "${JENKINS_USER}:${JENKINS_API_TOKEN}",                       
+                    // customHeaders: [[
+                    //    name: "Authorization",
+                    //    value: "Basic ${auth}"
+                     //]])
+                     message "Approve release?"
+                     ok "Yes"
+                     parameters {
+                       string(name: 'IS_APPROVED', defaultValue: 'Yes', description: 'Approve?')
+                     }
 
-                    if (approvalData.pendingInputActions.size() == 0) {
-                        echo “Received approval from external script.”
-                        approvalReceived = true
-                        env.PROMOTION_DECISION = “approve” // Set the promotion decision to “approve”
-                    }
+
+//                    if (approvalData.pendingInputActions.size() == 0) {
+//                        echo “Received approval from external script.”
+//                        approvalReceived = true
+//                        env.PROMOTION_DECISION = “approve” // Set the promotion decision to “approve”
+//                   }
                 } catch (Exception e) {
                     // Ignore any exceptions, continue waiting for approval
                 }
