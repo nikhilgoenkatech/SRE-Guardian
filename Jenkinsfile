@@ -120,7 +120,7 @@ node {
 
             while (approvalReceived == false) {
                 if ((System.currentTimeMillis() - startTime) >= (timeoutMinutes * 60 * 1000)) {
-                    echo ‘Build timed out. Did not receive approval from external script within the specified timeout.’
+                    echo "Build timed out. Did not receive approval from external script within the specified timeout."
                     currentBuild.result = ‘FAILURE’
                     break
                 }
