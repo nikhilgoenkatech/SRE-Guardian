@@ -127,7 +127,7 @@ node {
 
                 try {
                     // Check if the external script has given the approval using Jenkins API
-                    def response = httpRequest(
+                    def approvalResponse = httpRequest(
                      url: "${JENKINS_URL}/job/${JOB_NAME}/${BUILD_NUMBER}/input/promotionInput/api/json",
                      authentication: "${JENKINS_USER}:${JENKINS_API_TOKEN}",                       
                      customHeaders: [[
