@@ -114,7 +114,7 @@ node {
     stage('ValidateStaging') {
         script {
             def startTime = System.currentTimeMillis()
-            def timeoutMinutes = 15
+            def timeoutMinutes = 45
             def approvalReceived = false
             def auth = "${JENKINS_USER}:${JENKINS_API_TOKEN}".bytes.encodeBase64().toString()
 
