@@ -116,6 +116,7 @@ node {
             def startTime = System.currentTimeMillis()
             def timeoutMinutes = 15
             def approvalReceived = false
+            def auth = "${JENKINS_USER}:${JENKINS_API_TOKEN}".bytes.encodeBase64().toString()
 
             while (approvalReceived == false) {
                 if ((System.currentTimeMillis() - startTime) >= (timeoutMinutes * 60 * 1000)) {
@@ -126,9 +127,11 @@ node {
 
                 try {
                     // Check if the external script has given the approval using Jenkins API
-                    def approvalResponse = httpRequest(
-                        url: “${env.JENKINS_URL}/job/${env.JOB_NAME}/${env.BUILD_NUMBER}/input/promotionInput/api/json”,
-                        authentication: “${env.JENKINS_USER}:${env.JENKINS_API_TOKEN}”
+                   def response = httpRequest(
+                     url: "${JENKINS_URL}/job/${JOB_NAME}/${BUILD_NUMBER}/input/promotionInput/api/json",
+                     httpHeader: [
+                       Authorization: "Basic ${auth}"
+                     ]
                     )
                     def approvalData = readJSON(text: approvalResponse.content)
 
