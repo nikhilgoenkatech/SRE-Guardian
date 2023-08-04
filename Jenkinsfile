@@ -126,6 +126,7 @@ node {
                 }
 
                 try {
+                    input {
                     // Check if the external script has given the approval using Jenkins API
                     //def approvalResponse = httpRequest(
                     // url: "${JENKINS_URL}/job/${JOB_NAME}/${BUILD_NUMBER}/input/promotionInput/api/json",
@@ -139,7 +140,7 @@ node {
                      parameters {
                        string(name: 'IS_APPROVED', defaultValue: 'Yes', description: 'Approve?')
                      }
-
+                    }
 
 //                    if (approvalData.pendingInputActions.size() == 0) {
 //                        echo “Received approval from external script.”
