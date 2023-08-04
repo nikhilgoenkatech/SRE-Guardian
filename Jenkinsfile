@@ -113,23 +113,37 @@ node {
     
     stage('ValidateStaging') {
         script {
-            timeout(time: 1, unit: 'MINUTES') {
-            // Loop to wait for the Dynatrace workflow for approval or in case, it does not respond, proceed with timeout and terminate the build
             def startTime = System.currentTimeMillis()
-            def timeoutMinutes = 1
+            def timeoutMinutes = 15
             def approvalReceived = false
 
-            while (approvalReceived == false) {            
+            while (approvalReceived == false) {
                 if ((System.currentTimeMillis() - startTime) >= (timeoutMinutes * 60 * 1000)) {
-                        echo 'Build timed out. Did not hear from Dynatrace Workflow.'
-                        currentBuild.result = 'FAILURE'
-                        break
-                    }
-                    sleep(30)
+                    echo ‘Build timed out. Did not receive approval from external script within the specified timeout.’
+                    currentBuild.result = ‘FAILURE’
+                    break
                 }
-                echo "Promotion decision: ${env.PROMOTION_DECISION}"
+
+                try {
+                    // Check if the external script has given the approval using Jenkins API
+                    def approvalResponse = httpRequest(
+                        url: “${env.JENKINS_URL}/job/${env.JOB_NAME}/${env.BUILD_NUMBER}/input/promotionInput/api/json”,
+                        authentication: “${env.JENKINS_USER}:${env.JENKINS_API_TOKEN}”
+                    )
+                    def approvalData = readJSON(text: approvalResponse.content)
+
+                    if (approvalData.pendingInputActions.size() == 0) {
+                        echo “Received approval from external script.”
+                        approvalReceived = true
+                        env.PROMOTION_DECISION = “approve” // Set the promotion decision to “approve”
+                    }
+                } catch (Exception e) {
+                    // Ignore any exceptions, continue waiting for approval
+                }
+
+                sleep(30)
             }
-        }
+        } 
     }
     
     stage('DeployProduction') {
