@@ -125,6 +125,7 @@ node {
         
                 try {
                     env.PROMOTION_DECISION = input message: "Approve release?", ok: "approve"
+                    echo 'Received the input from user "$(env.PROMOTION_DECISION)"'
                     break
                 } catch (Exception e) {
                     // Ignore any exceptions, continue waiting for approval
