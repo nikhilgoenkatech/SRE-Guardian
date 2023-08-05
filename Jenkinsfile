@@ -128,7 +128,7 @@ node {
                 try {
                     env.PROMOTION_DECISION = input message: "Approve release?", ok: "approve"
                     approvalReceived = true
-                    }
+//                    }
 
 //                    if (approvalData.pendingInputActions.size() == 0) {
 //                        echo “Received approval from external script.”
