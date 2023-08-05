@@ -112,32 +112,28 @@ node {
     }
     
     stage('ValidateStaging') {
-      steps {
         script {
-             def startTime = System.currentTimeMillis()
-             def timeoutMinutes = 45
-             //def approvalReceived = false
-
-             while (1) {
-                 if ((System.currentTimeMillis() - startTime) >= (timeoutMinutes * 60 * 1000)) {
-                     echo "Build timed out. Did not receive approval from the external script within the specified timeout."
-                     currentBuild.result = 'FAILURE'
-                     break
-                 }
-
-                 try {
-                     env.PROMOTION_DECISION = input message: "Approve release?", ok: "approve"
-                     // On receiving input (reject or approve) it will come out of sleep
-                     break
-                 } catch (Exception e) {
-                     // Ignore any exceptions, continue waiting for approval
-                 }
-
-                 sleep(30)
-             }
-          }
-       }
-    }
+            def startTime = System.currentTimeMillis()
+            def timeoutMinutes = 45
+               
+            while (1) {
+                if ((System.currentTimeMillis() - startTime) >= (timeoutMinutes * 60 * 1000)) {
+                    echo "Build timed out. Did not receive approval from external script within the specified timeout."
+                    currentBuild.result = ‘FAILURE’
+                    break
+                }
+        
+                try {
+                    env.PROMOTION_DECISION = input message: "Approve release?", ok: "approve"
+                    break
+                } catch (Exception e) {
+                    // Ignore any exceptions, continue waiting for approval
+                }    
+                     
+                sleep(30)
+            }    
+        }
+    }            
     
     stage('DeployProduction') {
       if (env.PROMOTION_DECISION == 'approve') {
