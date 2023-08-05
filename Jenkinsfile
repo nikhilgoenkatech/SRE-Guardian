@@ -129,16 +129,14 @@ node {
                     input {
                     // Check if the external script has given the approval using Jenkins API
                     //def approvalResponse = httpRequest(
-                    // url: "${JENKINS_URL}/job/${JOB_NAME}/${BUILD_NUMBER}/input/promotionInput/api/json",
+                    // url: "${JENKINS_URL}/jxqob/${JOB_NAME}/${BUILD_NUMBER}/input/promotionInput/api/json",
                     // authentication: "${JENKINS_USER}:${JENKINS_API_TOKEN}",                       
                     // customHeaders: [[
                     //    name: "Authorization",
                     //    value: "Basic ${auth}"
                      //]])
-                     message "Approve release?"
-                     ok "Yes"
-                     parameters {
-                       string(name: 'IS_APPROVED', defaultValue: 'Yes', description: 'Approve?')
+                     env.PROMOTION_DECISION = input message "Approve release?"
+                     ok "approve"
                      }
                     }
 
