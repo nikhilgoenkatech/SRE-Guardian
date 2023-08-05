@@ -112,36 +112,31 @@ node {
     }
     
     stage('ValidateStaging') {
+      steps {
         script {
-            def startTime = System.currentTimeMillis()
-            def timeoutMinutes = 45
-            def approvalReceived = false
-            def auth = "${JENKINS_USER}:${JENKINS_API_TOKEN}".bytes.encodeBase64().toString()
+             def startTime = System.currentTimeMillis()
+             def timeoutMinutes = 45
+             //def approvalReceived = false
 
-            while (approvalReceived == false) {
-                if ((System.currentTimeMillis() - startTime) >= (timeoutMinutes * 60 * 1000)) {
-                    echo "Build timed out. Did not receive approval from external script within the specified timeout."
-                    currentBuild.result = ‘FAILURE’
-                    break
-                }
+             while (1) {
+                 if ((System.currentTimeMillis() - startTime) >= (timeoutMinutes * 60 * 1000)) {
+                     echo "Build timed out. Did not receive approval from the external script within the specified timeout."
+                     currentBuild.result = 'FAILURE'
+                     break
+                 }
 
-                try {
-                    env.PROMOTION_DECISION = input message: "Approve release?", ok: "approve"
-                    approvalReceived = true
-//                    }
+                 try {
+                     env.PROMOTION_DECISION = input message: "Approve release?", ok: "approve"
+                     // On receiving input (reject or approve) it will come out of sleep
+                     break
+                 } catch (Exception e) {
+                     // Ignore any exceptions, continue waiting for approval
+                 }
 
-//                    if (approvalData.pendingInputActions.size() == 0) {
-//                        echo “Received approval from external script.”
-//                        approvalReceived = true
-//                        env.PROMOTION_DECISION = “approve” // Set the promotion decision to “approve”
-//                   }
-                } catch (Exception e) {
-                    // Ignore any exceptions, continue waiting for approval
-                }
-
-                sleep(30)
-            }
-        } 
+                 sleep(30)
+             }
+          }
+       }
     }
     
     stage('DeployProduction') {
