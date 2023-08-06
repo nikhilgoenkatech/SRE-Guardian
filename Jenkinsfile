@@ -114,29 +114,24 @@ node {
     stage('ValidateStaging') {
         script {
             def startTime = System.currentTimeMillis()
-//            def timeoutMinutes = 45
-               
-            while (1) {
-//                if ((System.currentTimeMillis() - startTime) >= (timeoutMinutes * 60 * 1000)) {
-//                    echo "Build timed out. Did not receive approval from external script within the specified timeout."
-//                    currentBuild.result = ‘FAILURE’
-//                    break
-//                }
-        
+            while (1) {        
                 try {
                     env.PROMOTION_DECISION = input message: "Approve release?", ok: "approve"
                     echo 'Received the input from user "$(env.PROMOTION_DECISION)"'
                     break
                 } catch (Exception e) {
                     // Ignore any exceptions, continue waiting for approval
-                }    
-                     
-//              sleep(30)
+                }                     
             }    
         }
     }            
     
     stage('DeployProduction') {
+      if (env.PROMOTION_DECISION != "approve") {
+            sh 'echo "SRE-Guardian has disapproved the build, will not promote to production."' 
+            error("SRE-Guardian has disapproved the build, will not promote to production")
+            currentBuild.result = 'ABORTED'
+      }
       if (env.PROMOTION_DECISION == 'approve') {
         sh 'echo "$(env.PROMOTION_DECISION)"'
         // first we clean production        
