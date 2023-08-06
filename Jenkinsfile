@@ -129,8 +129,6 @@ node {
     }            
     
     stage('DeployProduction') {
-      if (env.PROMOTION_DECISION == 'approve') {
-        sh 'echo "$(env.PROMOTION_DECISION)"'
         // first we clean production        
         sh 'docker ps -f name=SampleOnlineBankProduction -q | xargs --no-run-if-empty docker container stop'
         sh 'docker container ls -a -fname=SampleOnlineBankProduction -q | xargs -r docker container rm'
@@ -160,7 +158,6 @@ node {
           // Create a sample dashboard for the staging stage
             sh "python3 populate_slo.py ${DT_URL} ${DT_TOKEN} SampleOnlineBankProduction ${JOB_NAME} prod ${BUILD_NUMBER} DockerService"            
         }
-      }
     } 
     
     stage('WarmUpProduction') {
