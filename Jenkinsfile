@@ -120,18 +120,15 @@ node {
                     echo 'Received the input from user "$(env.PROMOTION_DECISION)"'
                     break
                 } catch (Exception e) {
-                    // Ignore any exceptions, continue waiting for approval
+                    sh 'echo "SRE-Guardian has disapproved the build, will not promote to production."' 
+                    error("SRE-Guardian has disapproved the build, will not promote to production")
+                    currentBuild.result = 'ABORTED'
                 }                     
             }    
         }
     }            
     
     stage('DeployProduction') {
-      if (env.PROMOTION_DECISION != "approve") {
-            sh 'echo "SRE-Guardian has disapproved the build, will not promote to production."' 
-            error("SRE-Guardian has disapproved the build, will not promote to production")
-            currentBuild.result = 'ABORTED'
-      }
       if (env.PROMOTION_DECISION == 'approve') {
         sh 'echo "$(env.PROMOTION_DECISION)"'
         // first we clean production        
