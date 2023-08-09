@@ -24,9 +24,10 @@ PAYLOAD=$(cat <<EOF
   "entitySelector": "type($1), tag($2:$3)",
   "title":"\"$4\"",
   "properties" : {
-  "JenkinsUrl" : "$5",
+  "JenkinsJobName" : "$5",
   "BuildUrl" : "$7",
-  "Description": "$6"
+  "Description": "$6",
+  "BuildVersion":$8
   }
 }
 EOF
