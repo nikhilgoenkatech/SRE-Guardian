@@ -62,7 +62,7 @@ node {
         // lets push an event to dynatrace that indicates that we START a load test
         dir ('dynatrace-scripts') {
             sh './pushevent.sh SERVICE DockerService SampleOnlineBankStaging ' +
-               '"STARTING Load Test" ${JOB_NAME} "Starting a Load Test as part of Staging"' + 
+               '"Starting a Load Test as part of Staging" ${JOB_NAME} "Starting a Load Test as part of Staging"' + 
                ' ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
         }
         dir('dynatrace-scripts') {
@@ -83,7 +83,7 @@ node {
         // lets push an event to dynatrace that indicates that we STOP a load test
         dir ('dynatrace-scripts') {
             sh './pushevent.sh SERVICE DockerService SampleOnlineBankStaging '+
-               '"STOPPING Load Test" ${JOB_NAME} "Stopping a Load Test as part of the Testing stage" '+
+               '"Stopping Load Test that started as part of the Staging." ${JOB_NAME} "Stopping a Load Test as part of the Testing stage" '+
                '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
         }
 
@@ -165,7 +165,7 @@ node {
         // lets push an event to dynatrace that indicates that we START a load test
         dir ('dynatrace-scripts') {
             sh './pushevent.sh SERVICE DockerService SampleOnlineBankProduction '+
-               '"STARTING Load Test" ${JOB_NAME} "Starting a Load Test to warm up new prod deployment" '+
+               '"Starting a Load Test to warm up new Production Deployment." ${JOB_NAME} "Starting a Load Test to warm up new prod deployment" '+
                '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
         }
         
@@ -180,7 +180,7 @@ node {
         // lets push an event to dynatrace that indicates that we STOP a load test
         dir ('dynatrace-scripts') {
             sh './pushevent.sh SERVICE DockerService SampleOnlineBankProduction '+
-               '"STOPPING Load Test" ${JOB_NAME} "Stopping a Load Test as part of the Production warm up phase" '+
+               '"STOPPING Load Test Production Deployment." ${JOB_NAME} "Stopping a Load Test as part of the Production warm up phase" '+
                '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
         }
     }
