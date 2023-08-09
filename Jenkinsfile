@@ -107,7 +107,7 @@ node {
         dir ('dynatrace-scripts') {
             sh './pushevent.sh SERVICE DockerService SampleOnlineBankStaging '+
                '"STOPPING Sanity Test" ${JOB_NAME} "Stopping Sanity-test of the Testing stage" '+
-               '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}  ${BUILD_NUMBER}'
+               '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT} ${BUILD_NUMBER}'
         }
     }
     
