@@ -76,7 +76,7 @@ node {
             // start load test - simulating traffic for Staging enviornment on port 3000 
 
             sh "rm -f stagingloadtest.log stagingloadtestcontrol.txt"
-            sh "python3 smoke-test.py 3000 10 ${BUILD_NUMBER} stagingloadtest.log ${PUBLIC_IP} SampleOnlineBankStaging"
+            sh "python3 smoke-test.py 3000 100 ${BUILD_NUMBER} stagingloadtest.log ${PUBLIC_IP} SampleOnlineBankStaging"
             archiveArtifacts artifacts: 'stagingloadtest.log', fingerprint: true
         }
 
