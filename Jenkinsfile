@@ -47,7 +47,7 @@ node {
                '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' + 
                'Staging SampleOnlineBankStaging'
             
-            sh './pushdeployment.sh PROCESS_GROUP_INSTANCE [Environment]Environment:Staging' +
+            sh './pushdeployment.sh PROCESS_GROUP_INSTANCE [Environment]Environment:Staging ' +
                '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' + 
                'Staging SampleOnlineBankStaging'
                         
@@ -154,7 +154,7 @@ node {
                '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' +
                 'Production SampleOnlineBankProduction'
             
-            sh './pushdeployment.sh PROCESS_GROUP_INSTANCE [Environment]Environment:Production' +
+            sh './pushdeployment.sh PROCESS_GROUP_INSTANCE [Environment]Environment:Production ' +
                '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' + 
                'Production SampleOnlineBankProduction'
 
