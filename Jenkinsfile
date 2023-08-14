@@ -43,6 +43,10 @@ node {
 
         dir ('dynatrace-scripts') {
             // push a deployment event on the host with the tag JenkinsInstance created using automatic tagging rule
+            sh './pushdeployment.sh PROCESS_GROUP_INSTANCE SampleOnlineBankStaging ' +
+               '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' + 
+               'Staging SampleOnlineBankStaging'
+            
             sh './pushdeployment.sh HOST JenkinsInstance ' +
                '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' + 
                'Staging SampleOnlineBankStaging'
