@@ -25,7 +25,7 @@ PAYLOAD=$(cat <<EOF
      "type($1), tag($2)",
   "properties": {
     "dt.event.deployment.release_stage":"$6",
-    "dt.event.deployment.release_product":"$10",
+    "dt.event.deployment.release_product":"${10}",
     "dt.event.deployment.name":"$7",
     "dt.event.deployment.project": "$5",
     "dt.event.deployment.remediation_action_link": "my-ansible-playbook",
