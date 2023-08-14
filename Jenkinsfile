@@ -43,11 +43,11 @@ node {
 
         dir ('dynatrace-scripts') {
             // push a deployment event on the host with the tag JenkinsInstance created using automatic tagging rule
-            sh './pushdeployment.sh PROCESS_GROUP_INSTANCE SampleOnlineBankStaging ' +
+            sh './pushdeployment.sh HOST JenkinsInstance ' +
                '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' + 
                'Staging SampleOnlineBankStaging'
             
-            sh './pushdeployment.sh HOST JenkinsInstance ' +
+            sh './pushdeployment.sh PROCESS_GROUP_INSTANCE [Environment]Environment:Staging' +
                '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' + 
                'Staging SampleOnlineBankStaging'
                         
@@ -153,6 +153,10 @@ node {
             sh './pushdeployment.sh HOST JenkinsInstance ' +
                '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' +
                 'Production SampleOnlineBankProduction'
+            
+            sh './pushdeployment.sh PROCESS_GROUP_INSTANCE [Environment]Environment:Production' +
+               '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' + 
+               'Production SampleOnlineBankProduction'
 
             // Create a sample synthetic monitor so as to check the UI functionlity
            sh './synthetic-monitor.sh Production '+  '${JOB_NAME} ${BUILD_NUMBER}' + ' 3010'
