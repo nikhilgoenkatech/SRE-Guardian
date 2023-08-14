@@ -40,7 +40,7 @@ node {
                 "-e 'DT_TAGS=Environment=Staging Service=Sample-NodeJs-Service' " +
                 "-e 'DT_CUSTOM_PROP=ENVIRONMENT=Staging JOB_NAME=${JOB_NAME} " + 
                     "BUILD_TAG=${BUILD_TAG} BUILD_NUMBER=${BUIlD_NUMBER}' " +
-                "-e 'RELEASE_VERSION={BUILD_NUMBER}' " + "-e 'RELEASE_STAGE=Staging'")
+                "-e 'RELEASE_VERSION=${BUILD_NUMBER}' " + "-e 'RELEASE_STAGE=Staging'")
 
         dir ('dynatrace-scripts') {
             // push a deployment event on the host with the tag JenkinsInstance created using automatic tagging rule
@@ -146,7 +146,7 @@ node {
                 "-e 'DT_TAGS=Environment=Production Service=Sample-NodeJs-Service' "+
                 "-e 'DT_CUSTOM_PROP=ENVIRONMENT=Production JOB_NAME=${JOB_NAME} "+
                     "BUILD_TAG=${BUILD_TAG} BUILD_NUMBER=${BUIlD_NUMBER}' " +
-                "-e 'RELEASE_VERSION={BUILD_NUMBER}' " + "-e 'RELEASE_STAGE=Production'")
+                "-e 'RELEASE_VERSION=${BUILD_NUMBER}' " + "-e 'RELEASE_STAGE=Production'")
                    
         }
         
