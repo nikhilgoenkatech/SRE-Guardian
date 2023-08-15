@@ -27,7 +27,8 @@ PAYLOAD=$(cat <<EOF
   "JenkinsJobName" : "$5",
   "BuildUrl" : "$7",
   "Description": "$6",
-  "BuildVersion":"${10}"
+  "BuildVersion":"${10}",
+  "SRGTimestamp":"$(date --utc +%FT%TZ)"
   }
 }
 EOF
