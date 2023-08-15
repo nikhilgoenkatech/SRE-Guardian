@@ -28,7 +28,7 @@ PAYLOAD=$(cat <<EOF
   "BuildUrl" : "$7",
   "Description": "$6",
   "BuildVersion":"${10}",
-  "SRGTimestamp":"$(date --utc +%FT%TZ)"
+  "SRGTimestamp":"$(date --utc +%FT%T000000000Z)"
   }
 }
 EOF
