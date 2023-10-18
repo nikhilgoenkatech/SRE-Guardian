@@ -51,7 +51,7 @@ node {
             
             sh './pushdeployment.sh PROCESS_GROUP_INSTANCE [Environment]Environment:Staging ' +
                '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' + 
-               'Staging SampleOnlineBankStaging'
+               'Staging SampleOnlineBankStaging templates/job_template/rollback_staging_samplebank/'
                         
             // Create a on-demand synthetic monitor so as to check the UI functionlity
             sh './synthetic-monitor.sh Staging '+  '${JOB_NAME} ${BUILD_NUMBER}' + ' 3000'
@@ -155,7 +155,7 @@ node {
             // push a deployment event on the host with the tag JenkinsInstance:
             sh './pushdeployment.sh HOST JenkinsInstance ' +
                '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' +
-                'Production SampleOnlineBankProduction'
+                'Production SampleOnlineBankProduction templates/job_template/rollback_production_samplebank/'
             
             sh './pushdeployment.sh PROCESS_GROUP_INSTANCE [Environment]Environment:Production ' +
                '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' + 
