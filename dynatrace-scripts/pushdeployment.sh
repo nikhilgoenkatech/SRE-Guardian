@@ -28,7 +28,7 @@ PAYLOAD=$(cat <<EOF
     "dt.event.deployment.release_product":"node-bank2",
     "dt.event.deployment.name":"$7",
     "dt.event.deployment.project": "$5",
-    "dt.event.deployment.remediation_action_link": "my-ansible-playbook",
+    "dt.event.deployment.remediation_action_link": "$8",
     "dt.event.deployment.version": "$4",
     "dt.event.is_rootcause_relevant" : true
    }
