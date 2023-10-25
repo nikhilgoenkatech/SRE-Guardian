@@ -31,7 +31,7 @@ def create_slo(DT_URL, DT_TOKEN):
     "metricName": "perftest_response_time_$5",
     "metricExpression": "((builtin:service.response.time:filter(in(\"dt.entity.service\",entitySelector(\"type(SERVICE),tag($4:$3)\"))):avg:toUnit(MicroSecond,MilliSecond):partition(latency,value(good,lt(36.17))):splitBy():count:fold)/(builtin:service.response.time:filter(in(\"dt.entity.service\",entitySelector(\"type(SERVICE),tag($4:$3)\"))):avg:toUnit(MicroSecond,MilliSecond):splitBy():count:fold)*(100))",
     "evaluationType": "AGGREGATE",
-    "filter": "type(\"SERVICE\",tag(\"BuildVersion:$6\"))",
+    "filter": "type(\"SERVICE\"),tag(\"BuildVersion:$6\")",
     "target": 95,
     "warning": 97.5,
     "errorBudgetBurnRate": {
@@ -48,7 +48,7 @@ def create_slo(DT_URL, DT_TOKEN):
     "metricName": "perf_testfailure_rate_$5",
     "metricExpression":"(100)*(builtin:service.errors.total.successCount:filter(in(\"dt.entity.service\",entitySelector(\"type(SERVICE),tag($4:$3)\"))):splitBy())/(builtin:service.requestCount.total:filter(in(\"dt.entity.service\",entitySelector(\"type(SERVICE),tag($4:$3)\"))):splitBy())",
     "evaluationType": "AGGREGATE",
-    "filter": "type(\"SERVICE\",tag(\"BuildVersion:$6\)",
+    "filter": "type(\"SERVICE\"),tag(\"BuildVersion:$6\)",
     "target": 95,
     "warning": 97.5,
     "errorBudgetBurnRate": {
