@@ -48,7 +48,7 @@ def create_slo(DT_URL, DT_TOKEN):
     "metricName": "perf_testfailure_rate_$5",
     "metricExpression":"(100)*(builtin:service.errors.total.successCount:filter(in(\"dt.entity.service\",entitySelector(\"type(SERVICE),tag($4:$3)\"))):splitBy())/(builtin:service.requestCount.total:filter(in(\"dt.entity.service\",entitySelector(\"type(SERVICE),tag($4:$3)\"))):splitBy())",
     "evaluationType": "AGGREGATE",
-    "filter": "type(\"SERVICE\"),tag(\"BuildVersion:$6\)",
+    "filter": "type(\"SERVICE\"),tag(\"BuildVersion:$6\")",
     "target": 95,
     "warning": 97.5,
     "errorBudgetBurnRate": {
