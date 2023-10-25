@@ -11,7 +11,7 @@ def populate_payload(payload):
     payload["name"]=payload["name"].replace("$3",sys.argv[3])
     payload["metricName"] = payload["metricName"].replace("$5",sys.argv[5])
     payload["metricExpression"] = payload["metricExpression"].replace("$3",sys.argv[3]).replace("$4",sys.argv[4])
-
+    payload["metricExpression"] = payload["filter"].replace("$6",sys.argv[6])    
   except Exception as e:
     print("Exception in populate_payload: " + str(e))
     traceback.print_exc()
