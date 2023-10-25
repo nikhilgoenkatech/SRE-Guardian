@@ -41,9 +41,9 @@ def create_slo(DT_URL, DT_TOKEN):
     "timeframe": "-1d"
   } 
   #Failure Rate SLO definition  
-  FAILURE_PAYLOAD = {
+  PERFTEST_FAILURE_PAYLOAD = {
     "enabled": "true",
-    "name": "$3 - Failure Rate",
+    "name": "$3 - Performance test failed requests",
     "description": "Failure Rate",
     "metricName": "perf_testfailure_rate_$5",
     "metricExpression":"(100)*(builtin:service.errors.total.successCount:filter(in(\"dt.entity.service\",entitySelector(\"type(SERVICE),tag($4:$3)\"))):splitBy())/(builtin:service.requestCount.total:filter(in(\"dt.entity.service\",entitySelector(\"type(SERVICE),tag($4:$3)\"))):splitBy())",
@@ -184,7 +184,10 @@ def create_slo(DT_URL, DT_TOKEN):
     #Create Application SLOs
     populate_data = requests.post(query, headers = post_param, data = json.dumps(populate_payload(APP_RSP_PAYLOAD)))
     populate_data = requests.post(query, headers = post_param, data = json.dumps(populate_payload(APP_FAILURE_PAYLOAD)))
-
+    
+    #Create Performance tests SLOs
+    populate_data = requests.post(query, headers = post_param, data = json.dumps(populate_payload(PERFTEST_RSP_PAYLOAD)))
+    populate_data = requests.post(query, headers = post_param, data = json.dumps(populate_payload(PERFTEST_FAILURE_PAYLOAD)))
     if populate_data.status_code == 401:
       msg = "Auth Error"
 
