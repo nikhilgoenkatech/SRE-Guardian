@@ -29,15 +29,15 @@ node {
     
     stage('CleanStaging') {
         // The cleanup script makes sure no previous docker staging containers run
-        sh 'docker ps -f name=Alpha -q | xargs --no-run-if-empty docker container stop'
-        sh 'docker container ls -a -fname=Alpha -q | xargs -r docker container rm'
+        sh 'docker ps -f name=SampleOnlineBankStaging -q | xargs --no-run-if-empty docker container stop'
+        sh 'docker container ls -a -fname=SampleOnlineBankStaging -q | xargs -r docker container rm'
     }
     
     stage('DeployStaging') {
         // Lets deploy the previously build container
         def app = docker.image("sample-bankapp-service:${BUILD_NUMBER}")
-        app.run("--network mynetwork --name Alpha -p 3000:3000 " +
-                "-e 'DT_CLUSTER_ID=Alpha' " + 
+        app.run("--network mynetwork --name SampleOnlineBankStaging -p 3000:3000 " +
+                "-e 'DT_CLUSTER_ID=SampleOnlineBankStaging' " + 
                 "-e 'DT_TAGS=Environment=Staging Service=Sample-NodeJs-Service' " +
                 "-e 'DT_CUSTOM_PROP=ENVIRONMENT=Staging JOB_NAME=${JOB_NAME} " + 
                     "BUILD_TAG=${BUILD_TAG} BUILD_NUMBER=${BUIlD_NUMBER}' " +
@@ -47,27 +47,27 @@ node {
             // push a deployment event on the host with the tag JenkinsInstance created using automatic tagging rule
             sh './pushdeployment.sh HOST JenkinsInstance ' +
                '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' + 
-               'Staging Alpha'
+               'Staging SampleOnlineBankStaging'
             
             sh './pushdeployment.sh PROCESS_GROUP_INSTANCE [Environment]Environment:Staging ' +
                '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' + 
-               'Staging Alpha templates/job_template/rollback_staging_samplebank/'
+               'Staging SampleOnlineBankStaging templates/job_template/rollback_staging_samplebank/'
                         
             // Create a on-demand synthetic monitor so as to check the UI functionlity
             sh './synthetic-monitor.sh Staging '+  '${JOB_NAME} ${BUILD_NUMBER}' + ' 3000'
             
             // Create SLOs for the staging environment
-            sh "python3 create_slo.py ${DT_URL} ${DT_TOKEN} Alpha DockerService staging ${BUILD_NUMBER}"
+            sh "python3 create_slo.py ${DT_URL} ${DT_TOKEN} SampleOnlineBankStaging DockerService staging ${BUILD_NUMBER}"
             
             // Pull the SLOs id and create a sample dashboard for the staging stage
-            sh "python3 populate_slo.py ${DT_URL} ${DT_TOKEN} Alpha ${JOB_NAME} staging ${BUILD_NUMBER} DockerService"
+            sh "python3 populate_slo.py ${DT_URL} ${DT_TOKEN} SampleOnlineBankStaging ${JOB_NAME} staging ${BUILD_NUMBER} DockerService"
         }
     }
     
     stage('Testing') {
         // lets push an event to dynatrace that indicates that we START a load test
         dir ('dynatrace-scripts') {
-            sh './pushevent.sh SERVICE DockerService Alpha ' +
+            sh './pushevent.sh SERVICE DockerService SampleOnlineBankStaging ' +
                '"Starting a Load Test as part of Staging" ${JOB_NAME} "Starting a Load Test as part of Staging"' + 
                ' ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT} ${BUILD_NUMBER}'
         }
@@ -82,20 +82,20 @@ node {
             // start load test - simulating traffic for Staging enviornment on port 3000 
 
             sh "rm -f stagingloadtest.log stagingloadtestcontrol.txt"
-            sh "python3 smoke-test.py 3000 100 ${BUILD_NUMBER} stagingloadtest.log ${PUBLIC_IP} Alpha"
+            sh "python3 smoke-test.py 3000 100 ${BUILD_NUMBER} stagingloadtest.log ${PUBLIC_IP} SampleOnlineBankStaging"
             archiveArtifacts artifacts: 'stagingloadtest.log', fingerprint: true
         }
 
         // lets push an event to dynatrace that indicates that we STOP a load test
         dir ('dynatrace-scripts') {
-            sh './pushevent.sh SERVICE DockerService Alpha '+
+            sh './pushevent.sh SERVICE DockerService SampleOnlineBankStaging '+
                '"Stopping Load Test that started as part of the Staging." ${JOB_NAME} "Stopping a Load Test as part of the Testing stage" '+
                '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT} ${BUILD_NUMBER}'
         }
 
         // lets push an event to dynatrace that indicates that we START a sanity test
         dir ('dynatrace-scripts') {
-            sh './pushevent.sh SERVICE DockerService Alpha ' +
+            sh './pushevent.sh SERVICE DockerService SampleOnlineBankStaging ' +
                '"STARTING Sanity-Test" ${JOB_NAME} "Starting Sanity-test of the Testing stage"' + 
                ' ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT} ${BUILD_NUMBER}'
         }
@@ -105,13 +105,13 @@ node {
             // start load test - simulating traffic for Staging enviornment on port 3000 
 
             sh "rm -f stagingloadtest.log stagingloadtestcontrol.txt"
-            sh "python3 sanity-test.py 3000 10 ${BUILD_NUMBER} stagingsanitytest.log ${PUBLIC_IP} Alpha"
+            sh "python3 sanity-test.py 3000 10 ${BUILD_NUMBER} stagingsanitytest.log ${PUBLIC_IP} SampleOnlineBankStaging"
             archiveArtifacts artifacts: 'stagingsanitytest.log', fingerprint: true
         }
 
         // lets push an event to dynatrace that indicates that we STOP a load test
         dir ('dynatrace-scripts') {
-            sh './pushevent.sh SERVICE DockerService Alpha '+
+            sh './pushevent.sh SERVICE DockerService SampleOnlineBankStaging '+
                '"STOPPING Sanity Test" ${JOB_NAME} "Stopping Sanity-test of the Testing stage" '+
                '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT} ${BUILD_NUMBER}'
         }
@@ -136,14 +136,14 @@ node {
     
     stage('DeployProduction') {
         // first we clean production        
-        sh 'docker ps -f name=Bravo -q | xargs --no-run-if-empty docker container stop'
-        sh 'docker container ls -a -fname=Bravo -q | xargs -r docker container rm'
+        sh 'docker ps -f name=SampleOnlineBankProduction -q | xargs --no-run-if-empty docker container stop'
+        sh 'docker container ls -a -fname=SampleOnlineBankProduction -q | xargs -r docker container rm'
 
         dir ('sample-bank-app-service') {
             // now we deploy the new container
            def app = docker.build("sample-bankapp-service:${BUILD_NUMBER}", "-f ${env.DOCKERFILE} .")
-           app.run("--network mynetwork --name Bravo -p 3010:3000 "+
-                "-e 'DT_CLUSTER_ID=Bravo' "+
+           app.run("--network mynetwork --name SampleOnlineBankProduction -p 3010:3000 "+
+                "-e 'DT_CLUSTER_ID=SampleOnlineBankProduction' "+
                 "-e 'DT_TAGS=Environment=Production Service=Sample-NodeJs-Service' "+
                 "-e 'DT_CUSTOM_PROP=ENVIRONMENT=Production JOB_NAME=${JOB_NAME} "+
                     "BUILD_TAG=${BUILD_TAG} BUILD_NUMBER=${BUIlD_NUMBER}' " +
@@ -155,27 +155,27 @@ node {
             // push a deployment event on the host with the tag JenkinsInstance:
             sh './pushdeployment.sh HOST JenkinsInstance ' +
                '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' +
-                'Production Bravo templates/job_template/rollback_production_samplebank/'
+                'Production SampleOnlineBankProduction templates/job_template/rollback_production_samplebank/'
             
             sh './pushdeployment.sh PROCESS_GROUP_INSTANCE [Environment]Environment:Production ' +
                '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' + 
-               'Production Bravo'
+               'Production SampleOnlineBankProduction'
 
             // Create a sample synthetic monitor so as to check the UI functionlity
            sh './synthetic-monitor.sh Production '+  '${JOB_NAME} ${BUILD_NUMBER}' + ' 3010'
             
             // Create SLOs for the staging environment
-            sh "python3 create_slo.py ${DT_URL} ${DT_TOKEN} Bravo DockerService prod ${BUILD_NUMBER}"
+            sh "python3 create_slo.py ${DT_URL} ${DT_TOKEN} SampleOnlineBankProduction DockerService prod ${BUILD_NUMBER}"
                         
           // Create a sample dashboard for the staging stage
-            sh "python3 populate_slo.py ${DT_URL} ${DT_TOKEN} Bravo ${JOB_NAME} prod ${BUILD_NUMBER} DockerService"            
+            sh "python3 populate_slo.py ${DT_URL} ${DT_TOKEN} SampleOnlineBankProduction ${JOB_NAME} prod ${BUILD_NUMBER} DockerService"            
         }
     } 
     
     stage('WarmUpProduction') {
         // lets push an event to dynatrace that indicates that we START a load test
         dir ('dynatrace-scripts') {
-            sh './pushevent.sh SERVICE DockerService Bravo '+
+            sh './pushevent.sh SERVICE DockerService SampleOnlineBankProduction '+
                '"Starting a Load Test to warm up new Production Deployment." ${JOB_NAME} "Starting a Load Test to warm up new prod deployment" '+
                '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT} ${BUILD_NUMBER}'
         }
@@ -184,13 +184,13 @@ node {
         dir ('sample-bank-app-service-tests') {
             // start load test and run for 120 seconds - simulating traffic for Production enviornment on port 3010 
             sh "rm -f productionloadtest.log productionloadtestcontrol.txt"
-            sh "python3 smoke-test.py 3010 10 ${BUILD_NUMBER} productionloadtest.log ${PUBLIC_IP} Bravo "
+            sh "python3 smoke-test.py 3010 10 ${BUILD_NUMBER} productionloadtest.log ${PUBLIC_IP} SampleOnlineBankProduction "
             archiveArtifacts artifacts: 'productionloadtest.log', fingerprint: true
         }
 
         // lets push an event to dynatrace that indicates that we STOP a load test
         dir ('dynatrace-scripts') {
-            sh './pushevent.sh SERVICE DockerService Bravo '+
+            sh './pushevent.sh SERVICE DockerService SampleOnlineBankProduction '+
                '"STOPPING Load Test Production Deployment." ${JOB_NAME} "Stopping a Load Test as part of the Production warm up phase" '+
                '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT} ${BUILD_NUMBER}'
         }
@@ -202,7 +202,7 @@ node {
             // lets see if Dynatrace AI found problems -> if so - we can stop the pipeline!
             try {
                  DYNATRACE_PROBLEM_COUNT = 0
-                 DYNATRACE_PROBLEM_COUNT = sh 'python3 checkforproblems.py ${DT_URL} ${DT_TOKEN} DockerService:Bravo'
+                 DYNATRACE_PROBLEM_COUNT = sh 'python3 checkforproblems.py ${DT_URL} ${DT_TOKEN} DockerService:SampleOnlineBankProduction'
             } catch (Exception e) {
                 if (DYNATRACE_PROBLEM_COUNT) {
                    error("Dynatrace opened some problem. ABORTING the build!!")
@@ -214,7 +214,7 @@ node {
         
         // now lets generate a report using our CLI and lets generate some direct links back to dynatrace
         dir ('dynatrace-scripts') {
-            sh 'python3 make_api_call.py ${DT_URL} ${DT_TOKEN} DockerService:Bravo '+
+            sh 'python3 make_api_call.py ${DT_URL} ${DT_TOKEN} DockerService:SampleOnlineBankProduction '+
                         'service.responsetime'
             sh 'mv Test_report.csv Test_report_prod.csv'
             archiveArtifacts artifacts: 'Test_report_prod.csv', fingerprint: true
