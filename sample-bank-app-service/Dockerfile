@@ -5,6 +5,9 @@ MAINTAINER Nikhil Goenka "dynatraceone@dynatrace.com"
 # Update aptitude with new repo
 RUN apt-get update
 
+# Add logs directory
+RUN mkdir -p /logs
+
 # Install software 
 RUN apt-get install -y git
 
