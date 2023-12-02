@@ -42,7 +42,8 @@ node {
                 "-e 'DT_TAGS=Environment=Staging Service=Sample-NodeJs-Service' " +
                 "-e 'DT_CUSTOM_PROP=ENVIRONMENT=Staging JOB_NAME=${JOB_NAME} " + 
                     "BUILD_TAG=${BUILD_TAG} BUILD_NUMBER=${BUIlD_NUMBER}' " +
-                "-e 'RELEASE_VERSION=${BUILD_NUMBER}' " + "-e 'RELEASE_STAGE=Staging' " +
+                "-e 'RELEASE_VERSION=${BUILD_NUMBER}' " + 
+                "-e 'RELEASE_STAGE=Staging' " +
                "2>&1 | tee /logs/output.log")
 
         dir ('dynatrace-scripts') {
