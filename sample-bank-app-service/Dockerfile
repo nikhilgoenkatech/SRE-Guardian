@@ -3,7 +3,9 @@ FROM node:14
 MAINTAINER Nikhil Goenka "dynatraceone@dynatrace.com" 
 
 # Update aptitude with new repo
-RUN apt-get update
+RUN apt-get update && \
+    apt-get install -y coreutils
+
 
 # Add logs directory
 RUN mkdir -p /logs
