@@ -36,7 +36,8 @@ node {
     stage('DeployStaging') {
         // Lets deploy the previously build container
         def app = docker.image("sample-bankapp-service:${BUILD_NUMBER}")
-        app.run("--network mynetwork --name SampleOnlineBankStaging -p 3000:3000 -v StagingVol " +
+        //app.run("--network mynetwork --name SampleOnlineBankStaging -p 3000:3000 -v StagingVol " +
+        app.run("--network mynetwork --name SampleOnlineBankStaging -p 3000:3000 --log-driver=json-file --log-opt max-size=10m -v StagingVol:/var/log " +
                 "-e 'DT_CLUSTER_ID=SampleOnlineBankStaging' " + 
                 "-e 'DT_TAGS=Environment=Staging Service=Sample-NodeJs-Service' " +
                 "-e 'DT_CUSTOM_PROP=ENVIRONMENT=Staging JOB_NAME=${JOB_NAME} " + 
