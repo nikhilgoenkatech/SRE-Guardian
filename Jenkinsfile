@@ -37,12 +37,13 @@ node {
         // Lets deploy the previously build container
         def app = docker.image("sample-bankapp-service:${BUILD_NUMBER}")
         //app.run("--network mynetwork --name SampleOnlineBankStaging -p 3000:3000 -v StagingVol " +
-        app.run("--network mynetwork --name SampleOnlineBankStaging -p 3000:3000 --log-driver=json-file --log-opt max-size=10m -v StagingVol:/var/log " +
+        app.run("--network mynetwork --name SampleOnlineBankStaging -p 3000:3000 -v StagingVol:/logs " +
                 "-e 'DT_CLUSTER_ID=SampleOnlineBankStaging' " + 
                 "-e 'DT_TAGS=Environment=Staging Service=Sample-NodeJs-Service' " +
                 "-e 'DT_CUSTOM_PROP=ENVIRONMENT=Staging JOB_NAME=${JOB_NAME} " + 
                     "BUILD_TAG=${BUILD_TAG} BUILD_NUMBER=${BUIlD_NUMBER}' " +
-                "-e 'RELEASE_VERSION=${BUILD_NUMBER}' " + "-e 'RELEASE_STAGE=Staging'")
+                "-e 'RELEASE_VERSION=${BUILD_NUMBER}' " + "-e 'RELEASE_STAGE=Staging'" +
+               "> /logs/output.log 2>&1")
 
         dir ('dynatrace-scripts') {
             // push a deployment event on the host with the tag JenkinsInstance created using automatic tagging rule
