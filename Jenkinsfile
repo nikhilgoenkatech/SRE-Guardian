@@ -44,7 +44,7 @@ node {
                     "BUILD_TAG=${BUILD_TAG} BUILD_NUMBER=${BUIlD_NUMBER}' " +
                 "-e 'RELEASE_VERSION=${BUILD_NUMBER}' " + 
                 "-e 'RELEASE_STAGE=Staging' " +
-               "2>&1 | tee /logs/output.log")
+               "2>&1 | tee /logs")
 
         dir ('dynatrace-scripts') {
             // push a deployment event on the host with the tag JenkinsInstance created using automatic tagging rule
