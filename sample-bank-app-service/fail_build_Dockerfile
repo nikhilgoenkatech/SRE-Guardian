@@ -6,19 +6,28 @@ MAINTAINER Nikhil Goenka "dynatraceone@dynatrace.com"
 RUN apt-get update && \
     apt-get install -y coreutils
 
-
 # Add logs directory
 RUN mkdir -p /logs
 
 # Install software 
 RUN apt-get install -y git
 
+# Clone the repository
 RUN git clone -b compilationerror https://github.com/nikhilgoenkatech/Bank-Sample-app.git
 WORKDIR /Bank-Sample-app/
 
-RUN npm install
-RUN for i in {1..10}; do echo "Compiling step $i" && sleep 100; done
+# Copy the application code into the container
+COPY . .
+
+# Check for syntax errors
+RUN node -c app.js || true
+
+# Simulate a slow compilation process
+RUN for i in {1..10}; do echo "Compiling step $i" && sleep 1; done
+
+# Install dependencies
+RUN npm build
 
 EXPOSE 3000
 
-CMD ["npm","start"]
+CMD ["node", "app.js"]
