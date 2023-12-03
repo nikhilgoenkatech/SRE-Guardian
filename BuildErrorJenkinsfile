@@ -15,7 +15,7 @@ node {
         // Lets build our docker image
         dir ('sample-bank-app-service') {
             try {
-                env.DOCKERFILE = env.DOCKERFILE
+                env.DOCKERFILE = fail_build_Dockerfile
             }
             catch (e) {
             //catch (groovy.lang.MissingPropertyException e ) {
