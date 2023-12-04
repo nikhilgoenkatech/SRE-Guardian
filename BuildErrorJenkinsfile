@@ -12,6 +12,12 @@ node {
     }
 
     stage('Build') {
+        dir ('dynatrace-scripts') {
+            // push a deployment event on the host with the tag JenkinsInstance created using automatic tagging rule
+            sh './pushbuildevent.sh HOST JenkinsInstance ' +
+               '"Initiating the build process" ${JOB_NAME} "Building the code for Staging"' + 
+               ' ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT} ${BUILD_NUMBER}'
+        }
         // Lets build our docker image
         dir ('sample-bank-app-service') {
             try {
