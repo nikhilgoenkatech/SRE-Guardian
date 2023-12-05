@@ -28,7 +28,7 @@ node {
                 echo "Received an exception!!!"
                 env.DOCKERFILE = "fail_build_Dockerfile"
             }
-            def app = docker.build("sample-bankapp-service:${BUILD_NUMBER}", "-f ${env.DOCKERFILE} .","--no-cache" )    
+            def app = docker.build("sample-bankapp-service:${BUILD_NUMBER}", "-f ${env.DOCKERFILE} ." )    
         }
         echo "Completed Build phase"
     }
