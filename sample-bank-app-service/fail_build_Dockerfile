@@ -19,9 +19,11 @@ WORKDIR /Bank-Sample-app/
 # Copy the application code into the container
 COPY . .
 
+ARG CACHEBUST=1
 # Check for syntax errors
 RUN node -c app.js || true
 
+ARG CACHEBUST=1
 # Simulate a slow compilation process
 RUN for i in {1..10}; do echo "Compiling step $i" && sleep 100; done
 
