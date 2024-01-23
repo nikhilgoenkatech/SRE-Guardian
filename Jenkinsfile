@@ -38,7 +38,7 @@ node {
         def app = docker.image("sample-bankapp-service:${BUILD_NUMBER}")
         //app.run("--network mynetwork --name SampleOnlineBankStaging -p 3000:3000 -v StagingVol " +
         app.run("--network mynetwork --name SampleOnlineBankStaging -p 3000:3000 " +
-                "-e 'DT_CLUSTER_ID=SampleOnlineBankStaging' " + 
+                "-e 'DT_CLUSTER_ID=SampleOnlineBankStaging,${BUIlD_NUMBER}' " + 
                 "-e 'DT_TAGS=Environment=Staging Service=Sample-NodeJs-Service' " +
                 "-e 'DT_CUSTOM_PROP=ENVIRONMENT=Staging JOB_NAME=${JOB_NAME} " + 
                     "BUILD_TAG=${BUILD_TAG} BUILD_NUMBER=${BUIlD_NUMBER}' " +
